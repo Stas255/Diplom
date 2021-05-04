@@ -1,0 +1,9 @@
+{
+  "name": "client-server",
+  "version": "0.0.0",
+  "description": "ClientServer",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  }
+}
