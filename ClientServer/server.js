@@ -8,6 +8,7 @@ const app = express();
 
 let client;
 let rsa;
+let Mainkeys;
 
 const db = require("./app/models");
 const Role = db.role;
@@ -45,9 +46,9 @@ require('./app/routes/user.routes')(app);
 const io = require("socket.io-client");
 
 rsa = new RSA(359, 257);
-	var Mainkeys = rsa.createKey();
+Mainkeys = rsa.createKey();
 
-const socket = io.connect('http://localhost:7070',{query: Mainkeys});
+const socket = io.connect('http://localhost:7070',{query: {keys: JSON.stringify(Mainkeys)}});
 socket.on('connect_error', function (err) {
 	if (err == 'Invalid namespace') {
 		console.error("Attempted to connect to invalid namespace");
@@ -65,15 +66,15 @@ socket.on('disconnect', function () {
 	console.log('Disconnected');
 	client = undefined;
 	rsa = undefined;
+	Mainkeys = undefined;
+	rsa = new RSA(359, 257);
+	Mainkeys = rsa.createKey();
 });
 
 socket.on('returnKeys', (data) => {
 	let keys = new Keys(data);
 	console.log(keys);
 	client.SetKeys(keys);
-	rsa = new RSA(359, 257);
-	var Mainkeys = rsa.createKey();
-	socket.emit('ReturnToMainKey', Mainkeys);
 });
 
 app.get("/", (req, res) => {

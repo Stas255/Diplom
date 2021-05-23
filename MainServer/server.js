@@ -28,7 +28,10 @@ io.use((socket, next) => {
 
 io.on('connection', (socket) => {
 	if (client == undefined) {
+		let clientKeys = new Keys(JSON.parse(socket.handshake.query.keys));
+		console.log(clientKeys);
 		client = new Client(socket.client.id, socket.request.connection.remoteAddress);
+		client.SetKeys(clientKeys);
 		console.log('connected:', socket.client.id);
 		rsa = new RSA(359, 257);
 		var keys = rsa.createKey();
@@ -41,12 +44,6 @@ io.on('connection', (socket) => {
 			rsa = undefined;
 		}
 		console.log(socket.request.connection.remoteAddress + ' has disconnected from the chat.' + socket.client.id);
-	});
-
-	socket.on('ReturnToMainKey', function (ClientKeys) {
-		let clientKeys = new Keys(ClientKeys);
-		console.log(clientKeys);
-		client.SetKeys(clientKeys);
 	});
 
 	socket.on('encrynt', function (text, callbackFn) {
