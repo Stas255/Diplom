@@ -1,12 +1,28 @@
 {
     "version": "0.2.0",
     "configurations": [
+    
+
+
         {
             "type": "node", 
             "request": "launch",
-            "name": "nodemon",
+            "name": "nodemon-ClientServer",
             "runtimeExecutable": "nodemon",
             "program": "${workspaceFolder}/ClientServer/",
+            "restart": true,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "env": {
+                "debug": "app:*",
+            }
+        },
+        {
+            "type": "node", 
+            "request": "launch",
+            "name": "nodemon-MainServer",
+            "runtimeExecutable": "nodemon",
+            "program": "${workspaceFolder}/MainServer/",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",

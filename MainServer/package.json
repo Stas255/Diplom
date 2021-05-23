@@ -1,9 +1,25 @@
 {
-  "name": "main-server",
-  "version": "0.0.0",
-  "description": "MainServer",
+  "name": "main-server-node-js",
+  "version": "0.1.0",
+  "description": "Node.js main server",
   "main": "server.js",
   "author": {
-    "name": ""
+    "name": "Stas"
+  },
+  "scripts": {
+    "dev": "node server.js",
+    "debug": "nodemon server.js --exec babel-node"
+  },
+  "dependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/node": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "big-integer": "^1.6.48",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
+    "socket.io": "^4.1.2",
+    "socketio-jwt": "^4.6.2"
   }
 }
