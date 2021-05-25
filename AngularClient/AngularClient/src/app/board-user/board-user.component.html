@@ -1,38 +1,83 @@
 <div class="container">
   <header class="jumbotron">
-    <div *ngIf="IsCreate || IsUpdate; else elseBlock">
+    <div *ngIf="IsCreate || IsUpdate || IsGetPassword; else elseBlock">
       <form (ngSubmit)="onSubmit()" #passwordForm="ngForm" autocomplete="off">
         <div class="form-group">
           <label for="">Name</label>
-          <input type="text" [(ngModel)]="password.namePassword" name="namePassword" class="form-control" id="name" ngModel namePassword  #namePassword="ngModel" required>
-            <div *ngIf="namePassword.invalid && (namePassword.dirty || namePassword.touched)" class="alert alert-danger">
-              <div *ngIf="namePassword.errors!.required">
-                Name is required.
+          <input type="text" [(ngModel)]="newPassword.namePassword" name="namePassword" class="form-control" id="name"
+            ngModel namePassword #namePassword="ngModel" [readonly]="IsGetPassword" required>
+          <div *ngIf="!IsGetPassword && namePassword.invalid && (namePassword.dirty || namePassword.touched)"
+            class="alert alert-danger">
+            <div *ngIf="namePassword.errors!.required">
+              Name is required.
+            </div>
+          </div>
+        </div>
+        <div *ngIf="IsUpdate" class="form-group">
+          <input [(ngModel)]="IsResetPassword" name="isResetPassword" type="checkbox"> Reset password
+        </div>
+        <div *ngIf="IsGetPassword || IsResetPassword" class="form-group">
+          <label for="">Current Pasword</label>
+          <input type="password" [(ngModel)]="newPassword.oldPassword" name="oldPassword" class="form-control"
+            id="oldPassword" ngModel oldPassword #oldPassword="ngModel" required>
+          <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="alert alert-danger">
+            <div *ngIf="oldPassword.errors!.required">
+              Current Password is required.
+            </div>
+          </div>
+        </div>
+        <div *ngIf="(IsUpdate && IsResetPassword) || IsCreate">
+          <div class="form-group">
+            <label for="">New Pasword</label>
+            <input type="text" [(ngModel)]="newPassword.newPassword" name="newPasswords" class="form-control"
+              id="newPasswords" ngModel newPasswords #newPasswords="ngModel" required>
+            <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)" class="alert alert-danger">
+              <div *ngIf="newPasswords.errors!.required">
+                New password is required.
               </div>
             </div>
+          </div>
+          <div class="form-group">
+            <label for="">Confirm New Pasword</label>
+            <input type="password" [(ngModel)]="newPassword.confirmNewPassword" name="ConfirmNewPassword"
+              class="form-control" id="ConfirmNewPassword" pattern="{{ newPasswords.value }}" ngModel newPassword
+              #ConfirmNewPassword="ngModel" required>
+            <div *ngIf="ConfirmNewPassword.invalid && (ConfirmNewPassword.dirty || ConfirmNewPassword.touched)"
+              class="alert alert-danger">
+              <div *ngIf="ConfirmNewPassword.errors!.required">
+                Confirm password is required.
+              </div>
+              <div *ngIf="ConfirmNewPassword.errors!.pattern">
+                New Password & Confirm Password does not match.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="unicPassword" class="form-group">
+          <label for="">Unic Pasword</label>
+          <div class="input-group">
+            <input type="text" id="unicPassword" class="form-control" value="{{unicPassword}}" #formInputText readonly>
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">
+                <ng-container *ngIf="!isCopied; else elseTemplateCopied">
+                  <fa-icon (cbOnSuccess)="copied($event)" [ngxClipboard]="formInputText" [icon]="faCopyIcon"></fa-icon>
+                </ng-container>
+                <ng-template #elseTemplateCopied>
+                  Copied
+                </ng-template>
+              </span>
+            </div>
+          </div>
         </div>
         <div class="form-group">
-          <label for="">New pasword</label>
-          <input type="text" [(ngModel)]="password.newPassword" name="newPassword" class="form-control" id="newPassword" ngModel newPassword  #newPassword="ngModel" required>
-            <div *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched)" class="alert alert-danger">
-              <div *ngIf="newPassword.errors!.required">
-                new Password is required.
-              </div>
-            </div>
+          <button class="btn btn-success margin-right" [disabled]="!passwordForm.form.valid || (!IsResetPassword && !(newPassword.namePassword != password.namePassword))" type="submit">Send</button>
+          <button class="btn btn-danger margin-right" (click)="CanselForm()">Cansel</button>
         </div>
-        <div  *ngIf="IsUpdate" class="form-group">
-          <label for="">Old pasword</label>
-          <input type="password" [(ngModel)]="password.oldPassword" name="oldPassword" class="form-control" id="oldPassword" ngModel newPassword  #oldPassword="ngModel" required>
-            <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="alert alert-danger">
-              <div *ngIf="oldPassword.errors!.required">
-                old Password is required.
-              </div>
-            </div>
-        </div>
-        <button class="button" [disabled]="!passwordForm.form.valid" type="submit">Purchase</button>
       </form>
     </div>
-    <ng-template #elseBlock><p>{{ content }}</p></ng-template>
+    <ng-template #elseBlock>
+      <p>{{ content }}</p>
+    </ng-template>
   </header>
   <button class="btn btn-primary" (click)="AddPassword()"> Add Password</button>
   <div *ngIf="passwords.length != 0">
@@ -49,7 +94,8 @@
           <td hidden> passwor.id</td>
           <td> {{ passwor.namePassword }}</td>
           <td>
-            <button class="btn btn-primary" (click)="Update(passwor.id)"> Show details</button>
+            <button class="btn btn-primary margin-right" (click)="GetPassword(passwor.id)"> Get</button>
+            <button class="btn btn-primary" (click)="Update(passwor.id)"> Reset</button>
           </td>
         </tr>
       </tbody>

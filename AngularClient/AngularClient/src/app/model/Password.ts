@@ -1,15 +1,15 @@
 export class Password{
     id:string;
     namePassword:string;
-    fileId: string;
-    webId: string;
-    newPassword!: string;
-    oldPassword!: string;
+    newPassword: string;
+    oldPassword: string;
+    confirmNewPassword: string;
 
-    constructor(id:string, namePassword: string,fileId: string, webId: string) {
+    constructor(id:string, namePassword: string, newPassword: string, oldPassword: string, confirmNewPassword: string) {
         this.id = id;
         this.namePassword = namePassword;
-        this.fileId = fileId;
-        this.webId = webId;
+        this.newPassword = newPassword;
+        this.oldPassword = oldPassword;
+        this.confirmNewPassword = confirmNewPassword;
     }
 }

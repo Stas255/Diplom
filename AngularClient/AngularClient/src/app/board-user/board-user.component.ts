@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Password } from '../model/Password';
 import { UserService } from '../_services/user.service';
 import { FormBuilder } from '@angular/forms';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-board-user',
@@ -10,25 +11,34 @@ import { FormBuilder } from '@angular/forms';
 })
 export class BoardUserComponent implements OnInit {
 
+  faCopyIcon = faCopy;
   content: string = '';
   passwords: Password[] = [];
   IsCreate: boolean = false;
+  IsGetPassword: boolean = false;
   IsUpdate: boolean = false;
-  password: Password = new Password('','','','');
+  IsResetPassword: boolean = false;
+  password: Password = new Password('', '','','','');
+  unicPassword: string = '';
+  isCopied = false; 
+  newPassword: Password = new Password('', '','','',''); 
 
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
 
-   }
+  }
 
   ngOnInit(): void {
+    this.GetAllPasswords();
+  }
+
+  GetAllPasswords(): void {
     this.userService.getAllPaswords().subscribe(
       data => {
-        if(data.length == 0){
+        if (data.length == 0) {
           this.content = "You dont have passwords";
-        }else{
+        } else {
           this.passwords = data;
         }
-        
       },
       err => {
         this.content = JSON.parse(err.error).message;
@@ -36,20 +46,77 @@ export class BoardUserComponent implements OnInit {
     );
   }
 
+  GetPassword(id: string): void {
+    this.CanselForm();
+    this.IsGetPassword = !this.IsGetPassword;
+    this.newPassword = Object.assign({}, this.passwords.find(x => x.id == id)!);
+  }
+
+  copied(event) {
+    this.isCopied = event.isSuccess;
+  }
+
   Update(id: string): void {
-    this.IsCreate = false;
-    this.IsUpdate = true;
+    this.CanselForm();
+    this.IsUpdate = !this.IsUpdate;
     this.password = this.passwords.find(x => x.id == id)!;
+    this.newPassword = Object.assign({}, this.password);
 
   }
 
   AddPassword(): void {
-    this.IsUpdate = false;
-    this.IsCreate = true;
-    this.password = new Password('','','','');
+    this.CanselForm();
+    this.IsCreate = !this.IsCreate;
   }
 
-  onSubmit(){
-    console.log(this.password);
+  CanselForm(): void {
+    this.IsUpdate = false;
+    this.IsCreate = false;
+    this.isCopied = false;
+    this.IsGetPassword = false;
+    this.IsResetPassword = false;
+    this.password = new Password('', '','','','');
+    this.newPassword = new Password('', '','','','');
+    this.unicPassword = '';
+    this.content = '';
+  }
+
+  onSubmit() {
+    console.log(this.newPassword);
+    if (this.IsCreate) {
+      this.userService.setNewPassword(this.newPassword).subscribe(
+        result => {
+          this.GetAllPasswords();
+          this.unicPassword = result;
+          console.log(result);
+
+        }, err => {
+          this.content = JSON.parse(err.error).message;
+        }
+      );
+    }else if(this.IsGetPassword){
+      this.userService.getPassword(this.newPassword).subscribe(
+        result => {
+          this.unicPassword = result;
+          console.log(result);
+        }, err => {
+          this.content = JSON.parse(err.error).message;
+        }
+      );
+    }else if(this.IsUpdate){
+      this.userService.resetPassword(this.newPassword, this.IsResetPassword).subscribe(
+        result => {
+          if(result == "changed"){
+            this.content  = 'Changed';
+          }else{
+            this.unicPassword = result;
+            console.log(result);
+          }
+          this.GetAllPasswords();
+        }, err => {
+          this.content = JSON.parse(err.error).message;
+        }
+      );
+    }
   }
 }

@@ -13,9 +13,9 @@ let Mainkeys;
 const db = require("./app/models");
 const Role = db.role;
 
-db.sequelize.sync({ force: true }).then(() => {
+db.sequelize.sync({force : false}).then(() => {
 	console.log('Drop and Resync Db');
-	initial();
+	//initial();
 });
 
 function initial() {
@@ -44,7 +44,7 @@ const socket = io.connect('http://localhost:7070',{
     'reconnection': true,
     'reconnectionDelay': 1000,
     'reconnectionDelayMax' : 5000,
-    'reconnectionAttempts': 5,
+    'reconnectionAttempts': 50,
 	query: {keys: JSON.stringify(Mainkeys)}
 }/*,{query: {keys: JSON.stringify(Mainkeys)}}*/);
 socket.on('connect_error', function (err) {
@@ -79,6 +79,7 @@ app.use(function(req,res,next){
     req.io = socket;
 	req.rsa = rsa;
 	req.client = client;
+	res.type('application/json');
     next();
 });
 

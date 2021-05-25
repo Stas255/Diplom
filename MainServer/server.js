@@ -53,12 +53,18 @@ io.on('connection', (socket) => {
 	socket.on('createUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.CreatePass(user.id, user.namewebSite, user.password, callbackFn);
+		db.CreatePass(user.id, user.password, callbackFn);
 	});
 
 	socket.on('getUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
 		db.GetPass(user.id, user.fileId, user.webSiteId, user.password, callbackFn);
+	});
+
+	socket.on('resetUnicPassword', function (text, callbackFn) {
+		let res = rsa.Dencription(text);
+		let user = JSON.parse(res);
+		db.ResetPass(user.id, user.fileId, user.webSiteId, user.password,user.passwordNew, callbackFn);
 	});
 });

@@ -14,28 +14,40 @@ module.exports = function (app) {
 
 	app.get(
 		"/api/test/user",
-		[authJwt.verifyToken],
+		[authJwt.verifyToken,authJwt.isUser],
 		controller.userBoard
 	);
 
 	app.post("/api/user/savepassword",
 		[authJwt.verifyToken,
+			authJwt.isUser,
 		socketMain.savePassword],
 		controller.savePassword
 	);
 
 	app.post("/api/user/getpassword",
-		[authJwt.verifyToken],
+		[authJwt.verifyToken,
+			authJwt.isUser,
+		controller.getfilesID],
 		socketMain.getPassword
 	);
 
 	app.post("/api/user/getpasswords",
-		[authJwt.verifyToken],
+		[authJwt.verifyToken,
+			authJwt.isUser],
 		controller.getPasswords
 	);
 
+	app.post("/api/user/resetpassword",
+		[authJwt.verifyToken,
+			authJwt.isUser,
+		controller.getfilesID,
+		socketMain.resetPassword],
+		controller.resetPasswords
+	);
+
 	app.get(
-		"/api/test/admin",
+		"/api/admin",
 		[authJwt.verifyToken, authJwt.isAdmin],
 		controller.adminBoard
 	);
