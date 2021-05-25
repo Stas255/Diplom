@@ -2,6 +2,10 @@ var app = require('express')();
 var server = require('http').Server(app);
 const { RSA, Keys } = require('./app/crypt/rsa');
 const { Client } = require('./app/config/Client');
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost:27017/", { useUnifiedTopology: true, useNewUrlParser: true });
+
+var db = require("./app/config/db");
 server.listen(7070);
 
 let client;
@@ -33,11 +37,11 @@ io.on('connection', (socket) => {
 		client = new Client(socket.client.id, socket.request.connection.remoteAddress);
 		client.SetKeys(clientKeys);
 		console.log('connected:', socket.client.id);
-		rsa = new RSA(359, 257);
+		rsa = new RSA(191, 199);
 		var keys = rsa.createKey();
 		socket.emit('returnKeys', keys);
 	}
-	
+
 	socket.on('disconnect', function () {
 		if (client.CheckUser(socket.client.id, socket.request.connection.remoteAddress)) {
 			client = undefined;
@@ -46,8 +50,15 @@ io.on('connection', (socket) => {
 		console.log(socket.request.connection.remoteAddress + ' has disconnected from the chat.' + socket.client.id);
 	});
 
-	socket.on('encrynt', function (text, callbackFn) {
+	socket.on('createUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
-		callbackFn(JSON.parse(res));
+		let user = JSON.parse(res);
+		db.CreatePass(user.id, user.namewebSite, user.password, callbackFn);
+	});
+
+	socket.on('getUnicPassword', function (text, callbackFn) {
+		let res = rsa.Dencription(text);
+		let user = JSON.parse(res);
+		db.GetPass(user.id, user.fileId, user.webSiteId, user.password, callbackFn);
 	});
 });

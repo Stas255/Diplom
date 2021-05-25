@@ -31,24 +31,22 @@ function initial() {
 }
 
 var corsOptions = {
-	origin: "http://localhost:8081"
+	origin: "http://localhost:4200",
+	optionsSuccessStatus: 200
 };
-
-app.use(cors(corsOptions));
-
-app.use(bodyParser.json());
-
-app.use(bodyParser.urlencoded({ extended: true }));
-
-require('./app/routes/auth.routes')(app);
-require('./app/routes/user.routes')(app);
 
 const io = require("socket.io-client");
 
-rsa = new RSA(359, 257);
+rsa = new RSA(173, 131);
 Mainkeys = rsa.createKey();
 
-const socket = io.connect('http://localhost:7070',{query: {keys: JSON.stringify(Mainkeys)}});
+const socket = io.connect('http://localhost:7070',{
+    'reconnection': true,
+    'reconnectionDelay': 1000,
+    'reconnectionDelayMax' : 5000,
+    'reconnectionAttempts': 5,
+	query: {keys: JSON.stringify(Mainkeys)}
+}/*,{query: {keys: JSON.stringify(Mainkeys)}}*/);
 socket.on('connect_error', function (err) {
 	if (err == 'Invalid namespace') {
 		console.error("Attempted to connect to invalid namespace");
@@ -77,15 +75,22 @@ socket.on('returnKeys', (data) => {
 	client.SetKeys(keys);
 });
 
-app.get("/", (req, res) => {
-	var u = {
-		main:"dsdadad"
-	};
-	let text = rsa.Encription( JSON.stringify(u), client.keys);
-	socket.emit('encrynt', text, function (response){
-		console.log(response);
-	});
+app.use(function(req,res,next){
+    req.io = socket;
+	req.rsa = rsa;
+	req.client = client;
+    next();
 });
+
+app.use(cors(corsOptions));
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+require('./app/routes/auth.routes')(app);
+require('./app/routes/user.routes')(app);
+
 
 
 const PORT = process.env.PORT || 8080;

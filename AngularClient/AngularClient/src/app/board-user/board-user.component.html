@@ -1,0 +1,58 @@
+<div class="container">
+  <header class="jumbotron">
+    <div *ngIf="IsCreate || IsUpdate; else elseBlock">
+      <form (ngSubmit)="onSubmit()" #passwordForm="ngForm" autocomplete="off">
+        <div class="form-group">
+          <label for="">Name</label>
+          <input type="text" [(ngModel)]="password.namePassword" name="namePassword" class="form-control" id="name" ngModel namePassword  #namePassword="ngModel" required>
+            <div *ngIf="namePassword.invalid && (namePassword.dirty || namePassword.touched)" class="alert alert-danger">
+              <div *ngIf="namePassword.errors!.required">
+                Name is required.
+              </div>
+            </div>
+        </div>
+        <div class="form-group">
+          <label for="">New pasword</label>
+          <input type="text" [(ngModel)]="password.newPassword" name="newPassword" class="form-control" id="newPassword" ngModel newPassword  #newPassword="ngModel" required>
+            <div *ngIf="newPassword.invalid && (newPassword.dirty || newPassword.touched)" class="alert alert-danger">
+              <div *ngIf="newPassword.errors!.required">
+                new Password is required.
+              </div>
+            </div>
+        </div>
+        <div  *ngIf="IsUpdate" class="form-group">
+          <label for="">Old pasword</label>
+          <input type="password" [(ngModel)]="password.oldPassword" name="oldPassword" class="form-control" id="oldPassword" ngModel newPassword  #oldPassword="ngModel" required>
+            <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="alert alert-danger">
+              <div *ngIf="oldPassword.errors!.required">
+                old Password is required.
+              </div>
+            </div>
+        </div>
+        <button class="button" [disabled]="!passwordForm.form.valid" type="submit">Purchase</button>
+      </form>
+    </div>
+    <ng-template #elseBlock><p>{{ content }}</p></ng-template>
+  </header>
+  <button class="btn btn-primary" (click)="AddPassword()"> Add Password</button>
+  <div *ngIf="passwords.length != 0">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th hidden>id</th>
+          <th>Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let passwor of passwords">
+          <td hidden> passwor.id</td>
+          <td> {{ passwor.namePassword }}</td>
+          <td>
+            <button class="btn btn-primary" (click)="Update(passwor.id)"> Show details</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
