@@ -1,5 +1,24 @@
 <div class="container">
-    <header class="jumbotron">
-      <p>{{ content }}</p>
-    </header>
-  </div>
+  <header class="jumbotron">
+    <p>{{ content }}</p>
+  </header>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>User_Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let messag of messages">
+      <td> {{ messag.name }}</td>
+      <td> {{ messag.userName }}</td>
+      <td>
+        <button class="btn btn-primary" (click)="selectMessage(messag.id)"> Show details</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

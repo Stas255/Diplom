@@ -17,6 +17,9 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor'
 import { ClipboardModule } from 'ngx-clipboard';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpErrorInterceptor } from './_helpers/jwt.interceptor';
+import { ReportComponent } from './report/report.component';
+import { BlockedComponent } from './blocked/blocked.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,9 @@ import { HttpErrorInterceptor } from './_helpers/jwt.interceptor';
     HomeComponent,
     ProfileComponent,
     BoardAdminComponent,
-    BoardUserComponent
+    BoardUserComponent,
+    ReportComponent,
+    BlockedComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,8 @@ import { HttpErrorInterceptor } from './_helpers/jwt.interceptor';
     FormsModule,
     HttpClientModule,
     ClipboardModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgbModule
   ],
   providers: [
     authInterceptorProviders,

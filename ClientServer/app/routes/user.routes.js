@@ -46,9 +46,34 @@ module.exports = function (app) {
 		controller.resetPasswords
 	);
 
-	app.get(
-		"/api/admin",
-		[authJwt.verifyToken, authJwt.isAdmin],
-		controller.adminBoard
+	app.post("/api/user/sendmessage",
+		[authJwt.verifyToken,
+			authJwt.isUser],
+		controller.sendmessage
 	);
+
+	app.post(
+		"/api/admin/getMessages",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		controller.getMessages
+	);
+
+	app.post(
+		"/api/admin/getAllBlockedUsers",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		controller.getAllBlockedUsers
+	);
+
+	app.post(
+		"/api/admin/cancelBlock",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		controller.cancelBlock
+	);
+
+	app.post(
+		"/api/admin/getUserNameById",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		controller.getUserNameById
+	);
+	
 };

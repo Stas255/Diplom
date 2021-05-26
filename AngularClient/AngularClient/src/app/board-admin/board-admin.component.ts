@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from '../model/Message';
 import { UserService } from '../_services/user.service';
 
 @Component({
@@ -8,19 +9,26 @@ import { UserService } from '../_services/user.service';
 })
 export class BoardAdminComponent implements OnInit {
 
-  content: string ='';
+  content: string ='Select message';
+  messages: Message[] = [];
+  message: Message = new Message('','','','');
 
   constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.userService.getAdminBoard().subscribe(
+    this.userService.getAdminMessage().subscribe(
       data => {
-        this.content = data;
+        this.messages = data;
       },
       err => {
         this.content = JSON.parse(err.error).message;
       }
     );
+  }
+
+  selectMessage(id:string): void{
+    this.message = this.messages.find(x => x.id == id)!;
+    this.content = this.message.description;
   }
 
 }

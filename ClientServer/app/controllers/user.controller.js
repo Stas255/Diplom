@@ -2,6 +2,8 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Password = db.password;
+const Message = db.message;
+const BlockedUser = db.blockedUser
 
 exports.allAccess = (req, res) => {
 	res.status(200).send("Public Content.");
@@ -89,3 +91,76 @@ exports.savePassword = (req, res) => {
 		});
 	});
 };
+
+exports.sendmessage = (req, res) => {
+	User.findByPk(req.userId).then(user => {
+		if (!user) {
+			return res.status(404).send({ message: "User Not found." });
+		}
+		user.createMessage({
+			name: req.body.name,
+			userName: user.username,
+			description: req.body.description
+		}).then(result => {
+			res.send("Message was sent");
+		}).catch(err => {
+			console.log(err)
+		});
+	});
+};
+
+exports.getMessages = (req, res) => {
+	Message.findAll().then(messages => {
+		let messagesResult = [];
+		if (messages.length > 0) {
+			for (let i = 0; i < messages.length; i++) {
+				messagesResult.push({
+					id: messages[i].id,
+					name: messages[i].name,
+					userName: messages[i].userName,
+					description: messages[i].description
+				});
+			}
+			res.send(messagesResult);
+		} else {
+			res.status(200).send(messagesResult);
+		}
+	});
+};
+
+exports.cancelBlock = (req, res) => {
+	BlockedUser.destroy({
+		where: {
+			userId: req.body.userId
+		}
+	}).then(result => {
+		res.status(200).send("canceled");
+	});
+};
+
+
+exports.getAllBlockedUsers = (req, res) => {
+	BlockedUser.findAll().then(blockedUsers => {
+		let blockedUsersResult = [];
+		if (blockedUsers.length > 0) {
+			for (let i = 0; i < blockedUsers.length; i++) {
+				blockedUsersResult.push({
+					id: blockedUsers[i].id,
+					userId: blockedUsers[i].userId,
+					userName: blockedUsers[i].userName,
+					description: blockedUsers[i].description
+				});
+			}
+			res.send(blockedUsersResult);
+		} else {
+			res.status(200).send(blockedUsersResult);
+		}
+	});
+};
+
+exports.getUserNameById = (req, res) => {
+	User.findByPk(req.userId).then(user => {
+		res.send(user.username);
+	});
+};
+

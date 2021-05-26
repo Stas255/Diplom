@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Password } from '../model/Password';
+import { Message } from '../model/Message';
+import { BlockedUser } from '../model/BlockedUser';
 
 const API_URL = 'http://localhost:8000/api/';
 const API_URL_USER = 'http://localhost:8000/api/user/';
@@ -12,18 +14,6 @@ const API_URL_USER = 'http://localhost:8000/api/user/';
 export class UserService {
 
   constructor(private http: HttpClient) { }
-
-  getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + 'all', { responseType: 'text' });
-  }
-
-  getUserBoard(): Observable<any> {
-    return this.http.get(API_URL + 'user', { responseType: 'text' });
-  }
-
-  getAdminBoard(): Observable<any> {
-    return this.http.get(API_URL + 'admin', { responseType: 'text' });
-  }
 
   getAllPaswords(): Observable<Password[]> {
     return this.http.post<Password[]>(API_URL_USER + 'getpasswords', { responseType: 'json' });
@@ -61,5 +51,32 @@ export class UserService {
     return this.http.post(API_URL_USER + 'resetpassword',
       body,
       { responseType: 'text' });
+  }
+
+  getAdminMessage(): Observable<Message[]> {
+    return this.http.post<Message[]>(API_URL + 'admin/getMessages',{ responseType: 'json' });
+  }
+
+  sendMessage(message: Message): Observable<string> {
+    return this.http.post(API_URL_USER + 'sendmessage',{
+      name:message.name,
+      description: message.description
+    },{ responseType: 'text' });
+  }
+
+  getAllBlokedUsers(): Observable<BlockedUser[]> {
+    return this.http.post<BlockedUser[]>(API_URL + 'admin/getAllBlockedUsers',{ responseType: 'json' });
+  }
+
+  getUserNameById(userid:string): Observable<string> {
+    return this.http.post(API_URL + 'admin/getUserNameById',{
+      userId: userid
+    },{ responseType: 'text' });
+  }
+
+  cancelBlock(userid:string): Observable<string> {
+    return this.http.post(API_URL + 'admin/cancelBlock',{
+      userId: userid
+    },{ responseType: 'text' });
   }
 }

@@ -2,8 +2,9 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
+const BlockedUser = db.blockedUser;
 
-function verifyToken(req, res, next){
+function verifyToken(req, res, next) {
 	let token = req.headers["x-access-token"];
 
 	if (!token) {
@@ -14,7 +15,7 @@ function verifyToken(req, res, next){
 
 	jwt.verify(token, config.secret, (err, decoded) => {
 		if (err) {
-			if(err.message == 'jwt expired'){
+			if (err.message == 'jwt expired') {
 				return res.status(401).send("Time working token lost!");
 			}
 			return res.status(401).send("Unauthorized!");
@@ -24,12 +25,12 @@ function verifyToken(req, res, next){
 	});
 };
 
-function isUserExist(req, res, next){
+function isUserExist(req, res, next) {
 	User.findByPk(req.userId).then(user => {
-		if(user){
+		if (user) {
 			next();
 			return;
-		}else{
+		} else {
 			res.status(400).send({
 				message: "User not exist"
 			});
@@ -37,7 +38,7 @@ function isUserExist(req, res, next){
 	})
 }
 
-function isAdmin(req, res, next){
+function isAdmin(req, res, next) {
 	User.findByPk(req.userId).then(user => {
 		user.getRoles().then(roles => {
 			for (let i = 0; i < roles.length; i++) {
@@ -55,11 +56,39 @@ function isAdmin(req, res, next){
 	});
 };
 
-function isUser(req, res, next){
+function isUser(req, res, next) {
+	User.findByPk(req.userId).then(user => {
+		user.getRoles().then(roles => {
+			for (let i = 0; i < roles.length; i++) {
+				let isUser = false;
+				if (roles[i].name === "user") {
+					isUser = true;
+					let test = user.getBlockedUser().then(blocked => {
+						if(!blocked){
+							next();
+							return;
+						}else{
+							res.status(403).send("You are blocked because " + blocked.description);
+							return;
+						}
+					});
+
+				}
+			}
+			if (!isUser) {
+				res.status(403).send("Require User Role!");
+				return;
+			}
+		});
+	});
+};
+
+function isBlocked(req, res, next) {
 	User.findByPk(req.userId).then(user => {
 		user.getRoles().then(roles => {
 			for (let i = 0; i < roles.length; i++) {
 				if (roles[i].name === "user") {
+					let test = user.getBlockedUser();
 					next();
 					return;
 				}
@@ -75,5 +104,6 @@ const authJwt = {
 	verifyToken: verifyToken,
 	isAdmin: isAdmin,
 	isUser: isUser,
+	isBlocked: isBlocked
 };
 module.exports = authJwt;
