@@ -11,6 +11,13 @@ server.listen(7070);
 let client;
 let rsa;
 
+var al = require("./app/Classes/Algoritm");
+app.get('/', (req, res) => {
+	var hash = Math.random().toString(36).substring(2);
+	var result = al.Encrypt("pass", hash, [6, 9]);
+	res.send(result);
+});
+
 const isValidJwt = (socket) => {
 	const address = socket.handshake.address;
 	if (address === '::ffff:127.0.0.1') {
@@ -19,6 +26,19 @@ const isValidJwt = (socket) => {
 		return false;
 	}
 };
+
+const fs = require('fs');
+process.on('uncaughtException', function (err) {
+	if (err.code != 'ENOENT') {
+		var d = new Date();
+
+		var datestring = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + "-" + d.getHours() + "." + d.getMinutes() + "." + d.getSeconds() + "." + d.getMilliseconds();
+		fs.writeFileSync(__dirname + "/app/storage/bugs/" + datestring + ".json", JSON.stringify(err, Object.getOwnPropertyNames(err)), { flag: 'w' }, function (err) {
+		});
+	}
+});
+
+
 
 const io = require('socket.io')(server);
 
@@ -53,18 +73,34 @@ io.on('connection', (socket) => {
 	socket.on('createUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.CreatePass(user.id, user.password, callbackFn);
+		db.CreatePass(user, callbackFn);
 	});
 
 	socket.on('getUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.GetPass(user.id, user.fileId, user.webSiteId, user.password, callbackFn);
+		db.GetPass(user, callbackFn, socket);
 	});
 
 	socket.on('resetUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.ResetPass(user.id, user.fileId, user.webSiteId, user.password,user.passwordNew, callbackFn);
+		db.ResetPass(user, callbackFn, socket);
+	});
+
+	socket.on('getAllMessageName', function (text, callbackFn) {
+		var files = fs.readdirSync('./app/storage/bugs/');
+		callbackFn(files);
+	});
+
+	socket.on('getDetailsSystemMessages', function (text, callbackFn) {
+		let rawdata = fs.readFileSync('./app/storage/bugs/'+text);
+		callbackFn(rawdata);
+	});
+	socket.on('deleteSystemFileMessage', function (text, callbackFn) {
+		fs.unlink('./app/storage/bugs/'+text,function(err){
+			if(err) callbackFn(err);
+			callbackFn('file deleted successfully');
+	   }); 
 	});
 });

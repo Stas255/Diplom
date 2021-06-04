@@ -51,11 +51,36 @@ function resetPasswordONMainServer(req, res, next){
 	});
 }
 
+function getAllMessageNameOnMainServer(req, res, next){
+	var socket = req.io;
+	socket.emit('getAllMessageName', null, function (response){
+		res.send(response);
+	});
+}
+
+function getDetailsSystemMessagesOnMainServer(req, res, next){
+	var socket = req.io;
+	const fileName = req.body.fileName
+	socket.emit('getDetailsSystemMessages', fileName, function (response){
+		res.send(response);
+	});
+}
+
+function deleteSystemFileMessageOnMainServer(req, res, next){
+	var socket = req.io;
+	const fileName = req.body.fileName
+	socket.emit('deleteSystemFileMessage', fileName, function (response){
+		res.send(response);
+	});
+}
 
 const socketMain = {
 	savePassword: savePasswordOnMainServer,
 	getPassword: getPasswordOnMainServer,
-	resetPassword: resetPasswordONMainServer
+	resetPassword: resetPasswordONMainServer,
+	getAllMessageName: getAllMessageNameOnMainServer,
+	getDetailsSystemMessages:getDetailsSystemMessagesOnMainServer,
+	deleteSystemFileMessage:deleteSystemFileMessageOnMainServer
 };
 
 module.exports = socketMain;

@@ -64,12 +64,27 @@ function isUser(req, res, next) {
 				if (roles[i].name === "user") {
 					isUser = true;
 					let test = user.getBlockedUser().then(blocked => {
-						if(!blocked){
+						if (!blocked) {
 							next();
 							return;
-						}else{
-							res.status(403).send("You are blocked because " + blocked.description);
-							return;
+						} else {
+							var description = 'You are blocked because ' + blocked.description + '\n You can report only 1 message\n' + (blocked.sentMessage?'You sent':''); 
+							if (res.req.originalUrl == "/api/user/sendmessage") {
+								if (!blocked.sentMessage) {
+									blocked.update({
+										sentMessage: 1
+									}).then(result => {
+										next();
+										return;
+									});
+								} else {
+									res.status(403).send(description);
+									return;
+								}
+							} else {
+								res.status(403).send(description);
+								return;
+							}
 						}
 					});
 

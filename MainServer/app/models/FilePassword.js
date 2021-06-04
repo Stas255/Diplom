@@ -5,7 +5,8 @@ const filePassword = new Schema({
     userId:String,
     webSites:[{
         hash: String,
-        test: String
+        test: String,
+        numbers: [Number]
     }]
 });
 

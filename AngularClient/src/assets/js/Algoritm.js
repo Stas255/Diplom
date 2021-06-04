@@ -1,11 +1,11 @@
-const { Keys } = require("../crypt/rsa");
-
 String.prototype.count = function (s1) {
 	return (this.length - this.replace(new RegExp(s1, "g"), '').length) / s1.length;
 }
 
 
-exports.Encrypt = function (password, hash, numbers) {
+Encrypt = function (password) {
+	var hash = Math.random().toString(36).substring(2);
+	var numbers = Array.from({ length: 2 }, () => Math.floor(Math.random() * 9) + 3);
 	var i = 0;
 	var finish = "";
 	var t = 1;

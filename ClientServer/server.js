@@ -12,6 +12,8 @@ let Mainkeys;
 
 const db = require("./app/models");
 const Role = db.role;
+const User = db.user;
+const BlockedUser = db.blockedUser
 
 db.sequelize.sync({force : false}).then(() => {
 	console.log('Drop and Resync Db');
@@ -46,7 +48,7 @@ const socket = io.connect('http://localhost:7070',{
     'reconnectionDelayMax' : 5000,
     'reconnectionAttempts': 50,
 	query: {keys: JSON.stringify(Mainkeys)}
-}/*,{query: {keys: JSON.stringify(Mainkeys)}}*/);
+});
 socket.on('connect_error', function (err) {
 	if (err == 'Invalid namespace') {
 		console.error("Attempted to connect to invalid namespace");
@@ -73,6 +75,17 @@ socket.on('returnKeys', (data) => {
 	let keys = new Keys(data);
 	console.log(keys);
 	client.SetKeys(keys);
+});
+
+socket.on('blockUser', (data) => {
+	console.log(data.idUser);
+	User.findByPk(data.idUser).then(result => {
+		BlockedUser.create({
+			description: data.description,
+			userId: data.idUser,
+			userName: result.username
+		});
+	});
 });
 
 app.use(function(req,res,next){

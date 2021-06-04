@@ -28,7 +28,7 @@ exports.resetPasswords = (req, res) => {
 		password.update({
 			name: req.body.passwordName
 		}).then(result => {
-			if(req.body.passwordNew){
+			if (req.body.passwordNew) {
 				return res.send(req.unicPassword);
 			}
 			return res.send("changed");
@@ -36,7 +36,7 @@ exports.resetPasswords = (req, res) => {
 	});
 };
 
-exports.getfilesID  = (req, res, next) => {
+exports.getfilesID = (req, res, next) => {
 	Password.findByPk(req.body.passwordId).then(password => {
 		if (!password) {
 			return res.status(404).send({ message: "Password Not found." });
@@ -125,6 +125,20 @@ exports.getMessages = (req, res) => {
 		} else {
 			res.status(200).send(messagesResult);
 		}
+	});
+};
+
+exports.deleteUsersMessages = (req, res) => {
+	Message.destroy({
+		where: {
+			id: req.body.messageId
+		}
+	}).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
+		if (rowDeleted === 1) {
+			res.send('Deleted successfully');
+		}
+	}, function (err) {
+		cres.send(err);
 	});
 };
 

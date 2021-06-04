@@ -10,7 +10,11 @@ module.exports = (sequelize, Sequelize) => {
 		},
 		userName: {
 			type: Sequelize.STRING
+		},
+		sentMessage: {
+			type: Sequelize.BOOLEAN
 		}
+
 	});
 
 	return Password;

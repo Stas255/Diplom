@@ -53,9 +53,15 @@ module.exports = function (app) {
 	);
 
 	app.post(
-		"/api/admin/getMessages",
+		"/api/admin/getUsersMessages",
 		[authJwt.verifyToken, authJwt.isAdmin],
 		controller.getMessages
+	);
+
+	app.post(
+		"/api/admin/deleteUsersMessages",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		controller.deleteUsersMessages
 	);
 
 	app.post(
@@ -74,6 +80,24 @@ module.exports = function (app) {
 		"/api/admin/getUserNameById",
 		[authJwt.verifyToken, authJwt.isAdmin],
 		controller.getUserNameById
+	);
+
+	app.post(
+		"/api/admin/getAllNamesSystemMessages",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		socketMain.getAllMessageName
+	);
+
+	app.post(
+		"/api/admin/getDetailsSystemMessages",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		socketMain.getDetailsSystemMessages
+	);
+
+	app.post(
+		"/api/admin/deleteSystemFileMessage",
+		[authJwt.verifyToken, authJwt.isAdmin],
+		socketMain.deleteSystemFileMessage
 	);
 	
 };
