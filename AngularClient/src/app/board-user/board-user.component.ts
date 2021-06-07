@@ -19,7 +19,7 @@ export class BoardUserComponent implements OnInit {
   IsUpdate: boolean = false;
   IsResetPassword: boolean = false;
   password: Password = new Password('', '','','','');
-  unicPassword: string = '';
+  uniqPassword: string = '';
   isCopied = false; 
   newPassword: Password = new Password('', '','','',''); 
 
@@ -35,7 +35,7 @@ export class BoardUserComponent implements OnInit {
     this.userService.getAllPaswords().subscribe(
       data => {
         if (data.length == 0) {
-          this.content = "You dont have passwords";
+          this.content = "У вас немає паролів";
         } else {
           this.passwords = data;
         }
@@ -77,18 +77,16 @@ export class BoardUserComponent implements OnInit {
     this.IsResetPassword = false;
     this.password = new Password('', '','','','');
     this.newPassword = new Password('', '','','','');
-    this.unicPassword = '';
+    this.uniqPassword = '';
     this.content = '';
   }
 
   onSubmit() {
-    console.log(this.newPassword);
     if (this.IsCreate) {
       this.userService.setNewPassword(this.newPassword).subscribe(
         result => {
           this.GetAllPasswords();
-          this.unicPassword = result;
-          console.log(result);
+          this.uniqPassword = result;
 
         }, err => {
           this.content = JSON.parse(err.error).message;
@@ -97,8 +95,7 @@ export class BoardUserComponent implements OnInit {
     }else if(this.IsGetPassword){
       this.userService.getPassword(this.newPassword).subscribe(
         result => {
-          this.unicPassword = result;
-          console.log(result);
+          this.uniqPassword = result;
         }, err => {
           this.content = JSON.parse(err.error).message;
         }
@@ -109,8 +106,7 @@ export class BoardUserComponent implements OnInit {
           if(result == "changed"){
             this.content  = 'Changed';
           }else{
-            this.unicPassword = result;
-            console.log(result);
+            this.uniqPassword = result;
           }
           this.GetAllPasswords();
         }, err => {

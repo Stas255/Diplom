@@ -20,10 +20,10 @@ exports.adminBoard = (req, res) => {
 exports.resetPasswords = (req, res) => {
 	Password.findByPk(req.body.passwordId).then(password => {
 		if (!password) {
-			return res.status(404).send({ message: "Password Not found." });
+			return res.status(404).send({ message: "Пароль не знайдено." });
 		}
 		if (password.userId != req.userId) {
-			return res.status(404).send({ message: "You cannot using it" });
+			return res.status(404).send({ message: "Ви не можете використовувати його" });
 		}
 		password.update({
 			name: req.body.passwordName
@@ -39,10 +39,10 @@ exports.resetPasswords = (req, res) => {
 exports.getfilesID = (req, res, next) => {
 	Password.findByPk(req.body.passwordId).then(password => {
 		if (!password) {
-			return res.status(404).send({ message: "Password Not found." });
+			return res.status(404).send({ message: "Пароль не знайдено." });
 		}
 		if (password.userId != req.userId) {
-			return res.status(404).send({ message: "You cannot using it" });
+			return res.status(404).send({ message: "Ви не можете використовувати його" });
 		}
 		req.filesId = {
 			fileId: password.file_password_id,
@@ -56,7 +56,7 @@ exports.getfilesID = (req, res, next) => {
 exports.getPasswords = (req, res) => {
 	User.findByPk(req.userId).then(user => {
 		if (!user) {
-			return res.status(404).send({ message: "User Not found." });
+			return res.status(404).send({ message: "Користувач не знайдений." });
 		}
 		user.getPasswords().then(passwords => {
 			let passwordsResult = [];
@@ -78,7 +78,7 @@ exports.getPasswords = (req, res) => {
 exports.savePassword = (req, res) => {
 	User.findByPk(req.userId).then(user => {
 		if (!user) {
-			return res.status(404).send({ message: "User Not found." });
+			return res.status(404).send({ message: "Користувач не знайдений." });
 		}
 		user.createPassword({
 			name: req.body.name,
@@ -95,14 +95,14 @@ exports.savePassword = (req, res) => {
 exports.sendmessage = (req, res) => {
 	User.findByPk(req.userId).then(user => {
 		if (!user) {
-			return res.status(404).send({ message: "User Not found." });
+			return res.status(404).send({ message: "Користувач не знайдений." });
 		}
 		user.createMessage({
 			name: req.body.name,
 			userName: user.username,
 			description: req.body.description
 		}).then(result => {
-			res.send("Message was sent");
+			res.send("Повідомлення надіслано");
 		}).catch(err => {
 			console.log(err)
 		});
@@ -135,7 +135,7 @@ exports.deleteUsersMessages = (req, res) => {
 		}
 	}).then(function (rowDeleted) { // rowDeleted will return number of rows deleted
 		if (rowDeleted === 1) {
-			res.send('Deleted successfully');
+			res.send('Видалено успішно');
 		}
 	}, function (err) {
 		cres.send(err);
@@ -148,7 +148,7 @@ exports.cancelBlock = (req, res) => {
 			userId: req.body.userId
 		}
 	}).then(result => {
-		res.status(200).send("canceled");
+		res.status(200).send("Розблоковано");
 	});
 };
 

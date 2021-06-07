@@ -1,27 +1,27 @@
 <div class="container">
-  <div class="text-center"><h3>Hi this is Safe Password Storage you can test is project.</h3></div>
+  <div class="text-center"><h3>Привіт, це "Safe Password Storage".<br>Ви можете протестувати проект.</h3></div>
   <header class="jumbotron">
     <form (ngSubmit)="onSubmit()" #passwordForm="ngForm" autocomplete="off">
         <div class="form-group">
-          <label for="">Pasword</label>
+          <label for="">Пароль</label>
           <input type="text" [(ngModel)]="password.newPassword" name="newPasswords" class="form-control"
             id="newPasswords" ngModel newPasswords #newPasswords="ngModel" required>
           <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)" class="alert alert-danger">
             <div *ngIf="newPasswords.errors!.required">
-              New password is required.
+              Потрібен пароль.
             </div>
           </div>
         </div>
-        <div *ngIf="unicPassword" class="form-group">
-          <label for="">Unic Pasword</label>
+        <div *ngIf="uniqPassword" class="form-group">
+          <label for="">Унікальний пароль</label>
           <div class="input-group">
-            <input type="text" id="unicPassword" class="form-control" value="{{unicPassword}}" #formInputText readonly>
+            <input type="text" id="uniqPassword" class="form-control" value="{{uniqPassword}}" #formInputText readonly>
           </div>
         </div>
         <div class="form-group">
           <button class="btn btn-success margin-right"
-            [disabled]="!passwordForm.form.valid || unicPassword"
-            type="submit">Send</button>
+            [disabled]="!passwordForm.form.valid || uniqPassword"
+            type="submit">Отримати</button>
         </div>
     </form>
   </header>

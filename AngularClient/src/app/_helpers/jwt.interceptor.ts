@@ -22,7 +22,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
         catchError((error: HttpErrorResponse) => {
           let errorMessage = '';
           if (error.error instanceof ErrorEvent) {
-            // client-side error
             errorMessage = `Error: ${error.error.message}`;
           } else {
             if ((error.status == 400 && error.error.message == "User not exist") || (error.status == 403 && error.error.message == "No token provided!") || error.status == 401) {

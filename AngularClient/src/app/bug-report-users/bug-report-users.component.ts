@@ -11,7 +11,7 @@ import { UserService } from '../_services/user.service';
 })
 export class BugReportUsersComponent implements OnInit {
 
-  content: string ='Select message';
+  content: string ='Виберіть повідомлення';
   messages: Message[] = [];
   message: Message = new Message('','','','');
 

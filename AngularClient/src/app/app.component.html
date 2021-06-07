@@ -7,31 +7,31 @@
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02" [ngbCollapse]="isCollapsed">
       <ul class="navbar-nav mr-auto" routerLinkActive="active" (click)="isCollapsed = !isCollapsed">
         <li class="nav-item">
-          <a href="/home" class="nav-link" routerLink="home">Home </a>
+          <a href="/home" class="nav-link" routerLink="home">Додому </a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
-          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-users">Bug reports (users)</a>
+          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-users">Звіти про помилки (користувачі)</a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
-          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-system">Bug reports (system)</a>
+          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-system">Звіти про помилки (система)</a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
-          <a href="/blocked" class="nav-link" *ngIf="isLoggedIn" routerLink="blocked">Blocked users</a>
+          <a href="/blocked" class="nav-link" *ngIf="isLoggedIn" routerLink="blocked">Заблоковані користувачі</a>
         </li>
         <li class="nav-item" *ngIf="showUserBoard">
-          <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user">Passwords</a>
+          <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user">Паролі</a>
         </li>
         <li class="nav-item" *ngIf="showUserBoard">
-          <a href="/report" class="nav-link" *ngIf="isLoggedIn" routerLink="report">Report bug</a>
+          <a href="/report" class="nav-link" *ngIf="isLoggedIn" routerLink="report">Повідомити про помилку</a>
         </li>
       </ul>
 
       <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn" (click)="isCollapsed = !isCollapsed">
         <li class="nav-item">
-          <a href="/register" class="nav-link" routerLink="register">Sign Up</a>
+          <a href="/register" class="nav-link" routerLink="register">Зареєструватися</a>
         </li>
         <li class="nav-item">
-          <a href="/login" class="nav-link" routerLink="login">Login</a>
+          <a href="/login" class="nav-link" routerLink="login">Увійти</a>
         </li>
       </ul>
 
@@ -40,7 +40,7 @@
           <a href="/profile" class="nav-link" routerLink="profile">{{ username }}</a>
         </li>
         <li class="nav-item">
-          <a href class="nav-link" (click)="logout()">LogOut</a>
+          <a href class="nav-link" (click)="logout()">Вийти</a>
         </li>
       </ul>
     </div>

@@ -68,7 +68,7 @@ function isUser(req, res, next) {
 							next();
 							return;
 						} else {
-							var description = 'You are blocked because ' + blocked.description + '\n You can report only 1 message\n' + (blocked.sentMessage?'You sent':''); 
+							var description = 'Вас заблокували через ' + blocked.description + '\n Ви можете відправити лише про одне повідомлення\n' + (blocked.sentMessage?'Ви вже надіслали':''); 
 							if (res.req.originalUrl == "/api/user/sendmessage") {
 								if (!blocked.sentMessage) {
 									blocked.update({
@@ -91,7 +91,7 @@ function isUser(req, res, next) {
 				}
 			}
 			if (!isUser) {
-				res.status(403).send("Require User Role!");
+				res.status(403).send("Потрібна роль користувача!");
 				return;
 			}
 		});
@@ -109,7 +109,7 @@ function isBlocked(req, res, next) {
 				}
 			}
 
-			res.status(403).send("Require User Role!");
+			res.status(403).send("Потрібна роль користувача!");
 			return;
 		});
 	});

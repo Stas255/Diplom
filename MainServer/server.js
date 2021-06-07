@@ -41,6 +41,10 @@ process.on('uncaughtException', function (err) {
 
 
 const io = require('socket.io')(server);
+let clientKeys;
+var Encription = function(text){
+	return rsa.Encription( JSON.stringify(text), clientKeys);
+}
 
 io.use((socket, next) => {
 	if (isValidJwt(socket)) {
@@ -52,7 +56,7 @@ io.use((socket, next) => {
 
 io.on('connection', (socket) => {
 	if (client == undefined) {
-		let clientKeys = new Keys(JSON.parse(socket.handshake.query.keys));
+		clientKeys = new Keys(JSON.parse(socket.handshake.query.keys));
 		console.log(clientKeys);
 		client = new Client(socket.client.id, socket.request.connection.remoteAddress);
 		client.SetKeys(clientKeys);
@@ -73,19 +77,19 @@ io.on('connection', (socket) => {
 	socket.on('createUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.CreatePass(user, callbackFn);
+		db.CreatePass(user, callbackFn, Encription);
 	});
 
 	socket.on('getUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.GetPass(user, callbackFn, socket);
+		db.GetPass(user, callbackFn, socket, Encription);
 	});
 
 	socket.on('resetUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.ResetPass(user, callbackFn, socket);
+		db.ResetPass(user, callbackFn, socket, Encription);
 	});
 
 	socket.on('getAllMessageName', function (text, callbackFn) {

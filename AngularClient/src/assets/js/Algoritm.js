@@ -118,5 +118,4 @@ function Start(text, find) {
 		result = find[number];
 	}
 	return result;
-
 }

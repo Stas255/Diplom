@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class BugReportSystemComponent implements OnInit {
 
-  content: any = 'Select message';
+  content: any = 'Виберіть повідомлення';
   messages: string[] = [];
 
   constructor(private userService: UserService , private tokenStorageService: TokenStorageService, private router: Router) { }

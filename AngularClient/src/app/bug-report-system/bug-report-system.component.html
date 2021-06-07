@@ -7,17 +7,17 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Actions</th>
+        <th>Назва</th>
+        <th>Дії</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let message of messages">
         <td> {{ message }}</td>
         <td>
-          <button class="btn btn-primary button-margin-right" (click)="selectMessage(message)"> Show details</button>
-          <button class="btn btn-success button-margin-right" (click)="DownloadFile(message)"> Download</button>
-          <button class="btn btn-danger" (click)="DeleteFile(message)"> Delete</button>
+          <button class="btn btn-primary button-margin-right" (click)="selectMessage(message)"> Показати деталі</button>
+          <button class="btn btn-success button-margin-right" (click)="DownloadFile(message)"> Завантажити</button>
+          <button class="btn btn-danger" (click)="DeleteFile(message)"> Видалити</button>
         </td>
       </tr>
     </tbody>

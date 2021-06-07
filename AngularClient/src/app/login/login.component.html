@@ -3,40 +3,40 @@
     <article class="card-body">
       <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="email">Електронна пошта</label>
           <input type="email" class="form-control" name="email" [(ngModel)]="form.email" required #email="ngModel" />
           <div class="alert-danger" *ngIf="f.submitted && email.invalid">
-            <div *ngIf="email.errors?.required">Email is required</div>
+            <div *ngIf="email.errors?.required">Потрібна електронна адреса</div>
             <div *ngIf="email.errors?.email">
-              Email must be a valid email address
+              Електронна адреса повинна відповідати шаблону електронної адреси
             </div>
           </div>
         </div>
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">Пароль</label>
           <input type="password" class="form-control" name="password" [(ngModel)]="form.password" required minlength="6"
             #password="ngModel" />
           <div class="alert alert-danger" role="alert" *ngIf="f.submitted && password.invalid">
-            <div *ngIf="password.errors?.required">Password is required</div>
+            <div *ngIf="password.errors?.required">Потрібен пароль</div>
             <div *ngIf="password.errors?.minlength">
-              Password must be at least 6 characters
+              Пароль повинен містити щонайменше 6 символів
             </div>
           </div>
         </div>
         <div class="form-group">
           <button class="btn btn-primary btn-block">
-            Login
+            Увійти
           </button>
         </div>
         <div class="form-group">
           <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
-            Login failed: {{ errorMessage }}
+            Помилка логіну:{{ errorMessage }}
           </div>
         </div>
       </form>
 
       <div class="alert alert-success" *ngIf="isLoggedIn">
-        Logged in as {{ roles }}.
+        Ви увійшли як {{ roles }}.
       </div>
     </article>
   </div>

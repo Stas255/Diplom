@@ -8,7 +8,7 @@ function savePasswordOnMainServer(req, res, next){
 	};
 	let text = rsa.Encription( JSON.stringify(user), client.keys);
 	socket.emit('createUnicPassword', text, function (response){
-		req.unicPassword = response;
+		req.unicPassword = JSON.parse(rsa.Dencription(response));
 		next();
 	});
 };
@@ -25,7 +25,8 @@ function getPasswordOnMainServer(req, res){
 	};
 	let text = rsa.Encription( JSON.stringify(user), client.keys);
 	socket.emit('getUnicPassword', text, function (response){
-		res.send(response);
+		var result = JSON.parse(rsa.Dencription(response));
+		res.send(result);
 	});
 };
 
@@ -46,7 +47,7 @@ function resetPasswordONMainServer(req, res, next){
 	}
 	let text = rsa.Encription( JSON.stringify(user), client.keys);
 	socket.emit('resetUnicPassword', text, function (response){
-		req.unicPassword = response;
+		req.unicPassword = JSON.parse(rsa.Dencription(response));
 		next();
 	});
 }

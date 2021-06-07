@@ -6,16 +6,16 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>User Name</th>
-                    <th>Actions</th>
+                    <th>Ім'я користувача</th>
+                    <th>Дії</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let user of blokedUsers">
                     <td>{{user.userName}}</td>
                     <td>
-                        <button class="btn btn-primary margin-right" (click)="GetDescription(user.id)">Description</button>
-                        <button class="btn btn-primary" (click)="CancelBlock(user.userId)"> Cansel</button>
+                        <button class="btn btn-primary margin-right" (click)="GetDescription(user.id)">Причина блокування</button>
+                        <button class="btn btn-primary" (click)="CancelBlock(user.userId)"> Розблокувати</button>
                     </td>
                 </tr>
             </tbody>

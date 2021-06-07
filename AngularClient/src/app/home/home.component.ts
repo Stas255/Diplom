@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   content: string = '';
   password: Password = new Password('', '','','','');
-  unicPassword: string = '';
+  uniqPassword: string = '';
 
   constructor(private userService: UserService) { }
 
@@ -21,6 +21,6 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit() {
-    this.unicPassword = Encrypt(this.password.newPassword);
+    this.uniqPassword = Encrypt(this.password.newPassword);
   }
 }

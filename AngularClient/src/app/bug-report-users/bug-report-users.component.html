@@ -7,9 +7,9 @@
 <table class="table table-hover">
   <thead>
     <tr>
-      <th>Name</th>
-      <th>User_Name</th>
-      <th>Actions</th>
+      <th>Назва</th>
+      <th>Ім'я користувача</th>
+      <th>Дії</th>
     </tr>
   </thead>
   <tbody>
@@ -17,8 +17,8 @@
       <td> {{ messag.name }}</td>
       <td> {{ messag.userName }}</td>
       <td>
-        <button class="btn btn-primary button-margin-right" (click)="selectMessage(messag.id)"> Show details</button>
-        <button class="btn btn-danger" (click)="deleteMessage(messag.id)"> Delete</button>
+        <button class="btn btn-primary button-margin-right" (click)="selectMessage(messag.id)"> Показати деталі</button>
+        <button class="btn btn-danger" (click)="deleteMessage(messag.id)"> Видалити</button>
       </td>
     </tr>
   </tbody>

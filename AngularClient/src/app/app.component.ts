@@ -30,7 +30,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
-    //this.aboutProject = this.deviceService.isMobile()? this.aboutProjectOnMob: this.aboutProjectOnPC;
     if (this.isLoggedIn) {
       const user = JSON.parse(this.tokenStorageService.getUser());
       this.roles = user.roles;
