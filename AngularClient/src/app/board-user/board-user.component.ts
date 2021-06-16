@@ -4,6 +4,9 @@ import { UserService } from '../_services/user.service';
 import { FormBuilder } from '@angular/forms';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 
+declare function zxcvbn(password: string): any;
+declare function toWords(password: string): any;
+
 @Component({
   selector: 'app-board-user',
   templateUrl: './board-user.component.html',
@@ -18,10 +21,13 @@ export class BoardUserComponent implements OnInit {
   IsGetPassword: boolean = false;
   IsUpdate: boolean = false;
   IsResetPassword: boolean = false;
-  password: Password = new Password('', '','','','');
+  password: Password = new Password('', '', '', '', '');
   uniqPassword: string = '';
-  isCopied = false; 
-  newPassword: Password = new Password('', '','','',''); 
+  isCopied = false;
+  isRequest = false;
+  isNewName = true;
+  newPassword: Password = new Password('', '', '', '', '');
+  aboutPassword = '';
 
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
 
@@ -41,7 +47,7 @@ export class BoardUserComponent implements OnInit {
         }
       },
       err => {
-        this.content = JSON.parse(err.error).message;
+        this.content = "Виникла помилка під час підключення до клієнтського сервера";
       }
     );
   }
@@ -73,46 +79,85 @@ export class BoardUserComponent implements OnInit {
     this.IsUpdate = false;
     this.IsCreate = false;
     this.isCopied = false;
+    this.isRequest = false;
     this.IsGetPassword = false;
     this.IsResetPassword = false;
-    this.password = new Password('', '','','','');
-    this.newPassword = new Password('', '','','','');
+    this.password = new Password('', '', '', '', '');
+    this.newPassword = new Password('', '', '', '', '');
     this.uniqPassword = '';
     this.content = '';
+    this.aboutPassword ='';
   }
 
   onSubmit() {
+    this.isRequest = true;
+    this.content = '';
     if (this.IsCreate) {
+      if(this.checkName()){
+        this.isRequest = false;
+        return;
+      }
       this.userService.setNewPassword(this.newPassword).subscribe(
         result => {
           this.GetAllPasswords();
           this.uniqPassword = result;
-
+          this.AboutPassword();
+          this.isRequest = false;
         }, err => {
-          this.content = JSON.parse(err.error).message;
+          this.checkError(err);
         }
       );
-    }else if(this.IsGetPassword){
+    } else if (this.IsGetPassword) {
       this.userService.getPassword(this.newPassword).subscribe(
         result => {
           this.uniqPassword = result;
+          this.isRequest = false;
         }, err => {
-          this.content = JSON.parse(err.error).message;
+          this.checkError(err);
         }
       );
-    }else if(this.IsUpdate){
+    } else if (this.IsUpdate) {
       this.userService.resetPassword(this.newPassword, this.IsResetPassword).subscribe(
         result => {
-          if(result == "changed"){
-            this.content  = 'Changed';
-          }else{
+          if (result == "changed") {
+            this.content = 'Змінено';
+            this.isRequest = false;
+          } else {
             this.uniqPassword = result;
+            this.AboutPassword();
+            this.isRequest = false;
           }
           this.GetAllPasswords();
         }, err => {
-          this.content = JSON.parse(err.error).message;
+          this.checkError(err);
         }
       );
     }
+  }
+
+  checkName(){
+    for(var i =0; i < this.passwords.length;i++){
+      if(this.passwords[i].namePassword == this.newPassword.namePassword){
+        alert('Для зручності вкажіть інше ім\'я пароля');
+        this.newPassword.namePassword = '';
+        return true;
+      }
+    }
+    return false;
+  }
+
+  AboutPassword(){
+    var test = zxcvbn(this.uniqPassword);
+    this.aboutPassword = toWords(test.crack_time);
+  }
+
+  checkError(err){
+    this.isRequest = false;
+    if(err.message == "Timeout has occurred"){
+      this.content = "Час дії запиту вичерпаний. Оновіть сторінку. та спробуйте";
+    }else{
+      this.content = JSON.parse(err.error).message;
+    }
+
   }
 }

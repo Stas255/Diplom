@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "node server.js",
-    "debug": "nodemon server.js --exec babel-node --ext js"
+    "debug": "nodemon server.js --ext js"
   },
   "dependencies": {
     "@babel/core": "^7.14.3",
@@ -23,6 +23,7 @@
     "mongoose": "^5.12.10",
     "node-storage": "0.0.9",
     "nodemon": "^2.0.7",
+    "os": "^0.1.1",
     "socket.io": "^4.1.2",
     "socketio-jwt": "^4.6.2"
   }

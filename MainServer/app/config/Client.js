@@ -1,5 +1,5 @@
 const {Keys} =  require('../crypt/rsa');
-export class Client {
+class Client {
     socket_id;
     client_ip;
     keys;
@@ -17,3 +17,4 @@ export class Client {
         return (this.client_ip == client_ip) && (this.socket_id == socket_id);
     }
 }
+exports.Client = Client;

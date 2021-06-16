@@ -53,7 +53,7 @@ function Revers(parameter) {
 function Split(finish, max) {
 	var d = 1;
 	var result = "";
-	for (let number = 0; number + d < finish.split('').length;) {
+	for (let number = 0; number + d <= finish.split('').length;) {
 		result += finish.substring(number, number + d) + ' ';
 		number += d;
 		if (d >= max) {

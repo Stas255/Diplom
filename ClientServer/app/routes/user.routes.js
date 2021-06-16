@@ -14,41 +14,44 @@ module.exports = function (app) {
 
 	app.get(
 		"/api/test/user",
-		[authJwt.verifyToken,authJwt.isUser],
+		[authJwt.verifyToken, authJwt.isUser],
 		controller.userBoard
 	);
 
 	app.post("/api/user/savepassword",
 		[authJwt.verifyToken,
-			authJwt.isUser,
+		authJwt.isUser,
+		socketMain.isConnect,
 		socketMain.savePassword],
 		controller.savePassword
 	);
 
 	app.post("/api/user/getpassword",
 		[authJwt.verifyToken,
-			authJwt.isUser,
+		authJwt.isUser,
+		socketMain.isConnect,
 		controller.getfilesID],
 		socketMain.getPassword
 	);
 
 	app.post("/api/user/getpasswords",
 		[authJwt.verifyToken,
-			authJwt.isUser],
+		authJwt.isUser],
 		controller.getPasswords
 	);
 
 	app.post("/api/user/resetpassword",
 		[authJwt.verifyToken,
-			authJwt.isUser,
+		authJwt.isUser,
 		controller.getfilesID,
+		socketMain.isConnect,
 		socketMain.resetPassword],
 		controller.resetPasswords
 	);
 
 	app.post("/api/user/sendmessage",
 		[authJwt.verifyToken,
-			authJwt.isUser],
+		authJwt.isUser],
 		controller.sendmessage
 	);
 
@@ -84,20 +87,23 @@ module.exports = function (app) {
 
 	app.post(
 		"/api/admin/getAllNamesSystemMessages",
-		[authJwt.verifyToken, authJwt.isAdmin],
+		[authJwt.verifyToken, authJwt.isAdmin,
+		socketMain.isConnect],
 		socketMain.getAllMessageName
 	);
 
 	app.post(
 		"/api/admin/getDetailsSystemMessages",
-		[authJwt.verifyToken, authJwt.isAdmin],
+		[authJwt.verifyToken, authJwt.isAdmin,
+		socketMain.isConnect],
 		socketMain.getDetailsSystemMessages
 	);
 
 	app.post(
 		"/api/admin/deleteSystemFileMessage",
-		[authJwt.verifyToken, authJwt.isAdmin],
+		[authJwt.verifyToken, authJwt.isAdmin,
+		socketMain.isConnect],
 		socketMain.deleteSystemFileMessage
 	);
-	
+
 };

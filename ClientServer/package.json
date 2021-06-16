@@ -7,7 +7,7 @@
     "name": "Stas"
   },
   "scripts": {
-    "dev": "node server.js",
+    "dev": "SET PORT=8000 && nodemon server.js",
     "debug": "nodemon --inspect server.js",
     "start": "SET PORT=8000 && nodemon server.js --exec babel-node"
   },

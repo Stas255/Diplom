@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
         });
       },
       err => {
-        this.errorMessage = err.error.message;
+        this.errorMessage = "Виникла помилка під час підключення до клієнтського сервера";
         this.isLoginFailed = true;
       }
     );

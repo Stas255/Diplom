@@ -11,4 +11,4 @@ const filePassword = new Schema({
 });
 
 const FilePassword = mongoose.model("FilePassword", filePassword);
-export default FilePassword;
+module.exports = FilePassword; 

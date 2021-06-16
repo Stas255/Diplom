@@ -1,22 +1,37 @@
 var app = require('express')();
+const { networkInterfaces } = require('os');
 var server = require('http').Server(app);
+const mongoose = require("mongoose");
+mongoose.connect("mongodb+srv://User:User@cluster.bl5br.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true });
 const { RSA, Keys } = require('./app/crypt/rsa');
 const { Client } = require('./app/config/Client');
-const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/", { useUnifiedTopology: true, useNewUrlParser: true });
 
 var db = require("./app/config/db");
-server.listen(7070);
+server.listen(7070, () => {
+	console.log(`\x1B[32mServer running at http://localhost:${7070}/\x1B[39m`)
+});
+
+app.get('/', (req, res) => {
+	const nets = networkInterfaces();
+	const results = Object.create(null);
+	for (const name of Object.keys(nets)) {
+		for (const net of nets[name]) {
+			// Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+			if (net.family === 'IPv4' && !net.internal) {
+				if (!results[name]) {
+					results[name] = [];
+				}
+				results[name].push(net.address);
+			}
+		}
+	}
+	res.send(results);
+});
 
 let client;
 let rsa;
 
 var al = require("./app/Classes/Algoritm");
-app.get('/', (req, res) => {
-	var hash = Math.random().toString(36).substring(2);
-	var result = al.Encrypt("pass", hash, [6, 9]);
-	res.send(result);
-});
 
 const isValidJwt = (socket) => {
 	const address = socket.handshake.address;
@@ -38,12 +53,10 @@ process.on('uncaughtException', function (err) {
 	}
 });
 
-
-
 const io = require('socket.io')(server);
 let clientKeys;
-var Encription = function(text){
-	return rsa.Encription( JSON.stringify(text), clientKeys);
+var Encription = function (text, clientKeys) {
+	return rsa.Encription(JSON.stringify(text), clientKeys);
 }
 
 io.use((socket, next) => {
@@ -77,19 +90,22 @@ io.on('connection', (socket) => {
 	socket.on('createUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.CreatePass(user, callbackFn, Encription);
+		let key = clientKeys;
+		db.CreatePass(user, callbackFn, Encription, key);
 	});
 
 	socket.on('getUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.GetPass(user, callbackFn, socket, Encription);
+		let key = clientKeys;
+		db.GetPass(user, callbackFn, socket, Encription, key);
 	});
 
 	socket.on('resetUnicPassword', function (text, callbackFn) {
 		let res = rsa.Dencription(text);
 		let user = JSON.parse(res);
-		db.ResetPass(user, callbackFn, socket, Encription);
+		let key = clientKeys;
+		db.ResetPass(user, callbackFn, socket, Encription, key);
 	});
 
 	socket.on('getAllMessageName', function (text, callbackFn) {
@@ -98,13 +114,13 @@ io.on('connection', (socket) => {
 	});
 
 	socket.on('getDetailsSystemMessages', function (text, callbackFn) {
-		let rawdata = fs.readFileSync('./app/storage/bugs/'+text);
+		let rawdata = fs.readFileSync('./app/storage/bugs/' + text);
 		callbackFn(rawdata);
 	});
 	socket.on('deleteSystemFileMessage', function (text, callbackFn) {
-		fs.unlink('./app/storage/bugs/'+text,function(err){
-			if(err) callbackFn(err);
+		fs.unlink('./app/storage/bugs/' + text, function (err) {
+			if (err) callbackFn(err);
 			callbackFn('file deleted successfully');
-	   }); 
+		});
 	});
 });

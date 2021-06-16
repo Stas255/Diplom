@@ -48,7 +48,12 @@ function resetPasswordONMainServer(req, res, next){
 	let text = rsa.Encription( JSON.stringify(user), client.keys);
 	socket.emit('resetUnicPassword', text, function (response){
 		req.unicPassword = JSON.parse(rsa.Dencription(response));
-		next();
+		if(req.unicPassword == 'Password not correct'){
+			return res.status(404).send({ message: "Пароль не правильний." });
+		}else{
+			next();
+		}
+	
 	});
 }
 
@@ -75,13 +80,22 @@ function deleteSystemFileMessageOnMainServer(req, res, next){
 	});
 }
 
+function isConnectOnMainServer(req, res, next){
+	if(req.connectToMainServer){
+		next();
+	}else{
+		return res.status(404).send({ message: "Помилка підключення до головного сервера" });
+	}
+}
+
 const socketMain = {
 	savePassword: savePasswordOnMainServer,
 	getPassword: getPasswordOnMainServer,
 	resetPassword: resetPasswordONMainServer,
 	getAllMessageName: getAllMessageNameOnMainServer,
 	getDetailsSystemMessages:getDetailsSystemMessagesOnMainServer,
-	deleteSystemFileMessage:deleteSystemFileMessageOnMainServer
+	deleteSystemFileMessage:deleteSystemFileMessageOnMainServer,
+	isConnect:isConnectOnMainServer
 };
 
 module.exports = socketMain;

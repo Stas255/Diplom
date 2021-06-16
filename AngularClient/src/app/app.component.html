@@ -1,7 +1,17 @@
 <div class="app">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a href="#" class="navbar-brand">Safe Password Storage</a>
-    <button class="navbar-toggler btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"  aria-expanded="false" aria-label="Toggle navigation" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarTogglerDemo02">
+    <div>
+      <div [ngClass]="{'text-success': ConnectToClient, 'text-danger' : !ConnectToClient }">
+        Клієнтський сервер
+      </div>
+      <div [ngClass]="{'text-success': ConnectToMain, 'text-danger' : !ConnectToMain }">
+        Головний сервер
+      </div>
+    </div>
+    <button class="navbar-toggler btn btn-outline-primary" type="button" data-toggle="collapse"
+      data-target="#navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation"
+      (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarTogglerDemo02">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02" [ngbCollapse]="isCollapsed">
@@ -10,10 +20,12 @@
           <a href="/home" class="nav-link" routerLink="home">Додому </a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
-          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-users">Звіти про помилки (користувачі)</a>
+          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-users">Звіти про помилки
+            (користувачі)</a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
-          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-system">Звіти про помилки (система)</a>
+          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-system">Звіти про помилки
+            (система)</a>
         </li>
         <li class="nav-item" *ngIf="showAdminBoard">
           <a href="/blocked" class="nav-link" *ngIf="isLoggedIn" routerLink="blocked">Заблоковані користувачі</a>

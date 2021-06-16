@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Password } from '../model/Password';
 import { UserService } from '../_services/user.service';
 
-declare function Encrypt(params:string):any;
+declare function Encrypt(params: string): any;
+declare function zxcvbn(password: string): any;
+declare function toWords(password: string): any;
 
 @Component({
   selector: 'app-home',
@@ -12,8 +14,9 @@ declare function Encrypt(params:string):any;
 export class HomeComponent implements OnInit {
 
   content: string = '';
-  password: Password = new Password('', '','','','');
+  password: Password = new Password('', '', '', '', '');
   uniqPassword: string = '';
+  aboutPassword: string = '';
 
   constructor(private userService: UserService) { }
 
@@ -22,5 +25,7 @@ export class HomeComponent implements OnInit {
 
   onSubmit() {
     this.uniqPassword = Encrypt(this.password.newPassword);
+    var test = zxcvbn(this.uniqPassword);
+    this.aboutPassword = toWords(test.crack_time);
   }
 }

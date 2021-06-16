@@ -53,7 +53,7 @@ function Revers(parameter) {
 function Split(finish, max) {
 	var d = 1;
 	var result = "";
-	for (let number = 0; number + d < finish.split('').length;) {
+	for (let number = 0; number + d <= finish.split('').length;) {
 		result += finish.substring(number, number + d) + ' ';
 		number += d;
 		if (d >= max) {
@@ -89,7 +89,7 @@ function CreatePassword(array, numbes) {
 		}
 		if (i == array.length - 3) {
 			find++;
-			i = 1;
+			i = 4;
 		}
 	}
 	for (var k = 0; k < array.length; k++) {

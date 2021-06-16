@@ -1,10 +1,10 @@
 var al = require("../Classes/Algoritm");
-import FilePassword from "../models/FilePassword";
+const FilePassword = require("../models/FilePassword");
 
 var Storage = require('node-storage');
 var userBlock = new Storage('./app/storage/user.json');
 
-exports.CreatePass = function (user, callbackFn, Encription) {
+exports.CreatePass = function (user, callbackFn, Encription, clientKeys) {
     var hash = Math.random().toString(36).substring(2);
     var numbers = Array.from({ length: 2 }, () => Math.floor(Math.random() * 9) + 3);
     FilePassword.findOne({ userId: user.id },
@@ -24,7 +24,7 @@ exports.CreatePass = function (user, callbackFn, Encription) {
                     const pass = res;
                     var webRes = result.webSites.find(e => e.hash == hash);
                     const web = webRes._id;
-                    callbackFn(Encription({ id: id, password: pass, webId: web }));
+                    callbackFn(Encription({ id: id, password: pass, webId: web }, clientKeys));
                 });
             } else {
                 const filePassword = new FilePassword();
@@ -40,13 +40,13 @@ exports.CreatePass = function (user, callbackFn, Encription) {
                     const pass = res;
                     var webRes = result.webSites.find(e => e.hash == hash);
                     const web = webRes._id;
-                    callbackFn(Encription({ id: id, password: pass, webId: web }));
+                    callbackFn(Encription({ id: id, password: pass, webId: web }, clientKeys));
                 });
             }
         });
 }
 
-exports.GetPass = function (user, callbackFn,socket, Encription) {
+exports.GetPass = function (user, callbackFn,socket, Encription, clientKeys) {
     FilePassword.findOne({ userId: user.id, _id: user.fileId }, function (err, doc) {
         var webSites = doc.webSites;
         var webRes = webSites.find(e => e._id == user.webSiteId);
@@ -56,7 +56,7 @@ exports.GetPass = function (user, callbackFn,socket, Encription) {
         var testRes = res.slice(0, 2) + res.slice(res.length - 2, res.split('').length);
         CheckPassword(testRes, webRes.test, user.id, socket);
         res = res.slice(2, res.length - 2);
-        callbackFn(Encription(res));
+        callbackFn(Encription(res, clientKeys));
     });
 }
 
@@ -72,7 +72,7 @@ function CheckPassword(testfrombd, test, idUser, socket){
         if(!user){
             userBlock.put(idUser, {incorrectPaswordCount:1});
         }else{
-            if(user?.incorrectPaswordCount > 3){
+            if(user.incorrectPaswordCount > 3){
                 socket.emit('blockUser',{idUser:idUser,description:"Too many incorrect password"});
             }
             user.incorrectPaswordCount++;
@@ -81,7 +81,7 @@ function CheckPassword(testfrombd, test, idUser, socket){
     }
 }
 
-exports.ResetPass = function (user, callbackFn, socket, Encription) {
+exports.ResetPass = function (user, callbackFn, socket, Encription, clientKeys) {
     FilePassword.findOne({ userId: user.id, _id: user.fileId }, function (err, doc) {
         var webSites = doc.webSites;
         var webRes = webSites.find(e => e._id == user.webSiteId);
@@ -99,12 +99,12 @@ exports.ResetPass = function (user, callbackFn, socket, Encription) {
             webRes.numbers = numbersNew;
             doc.save().then(result => {
                 resNew = resNew.slice(2, resNew.length - 2);
-                callbackFn(Encription(resNew))
+                callbackFn(Encription(resNew, clientKeys))
             }).catch((err) => {
-                callbackFn(Encription(err));
+                callbackFn(Encription(err, clientKeys));
             });
         } else {
-            callbackFn(Encription("Password not correct"));
+            callbackFn(Encription("Password not correct", clientKeys));
         }
     });
 }

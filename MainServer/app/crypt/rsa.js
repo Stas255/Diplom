@@ -1,7 +1,7 @@
 var bigInt = require("big-integer");
-export class Keys {
-    publicKey;
-    n;
+class Keys {
+    publicKey = null;
+    n = null;
 
     constructor(obj){
         Object.assign(this, obj)
@@ -13,7 +13,7 @@ export class Keys {
     }
 }
 
-export class RSA extends Keys {
+class RSA extends Keys {
     #privateKey;
     constructor(p, q) {
         super();
@@ -85,3 +85,6 @@ export class RSA extends Keys {
     }
 
 }
+
+exports.Keys = Keys;
+exports.RSA = RSA;

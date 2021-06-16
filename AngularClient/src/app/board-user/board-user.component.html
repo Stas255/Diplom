@@ -1,12 +1,12 @@
 <div class="container">
   <header class="jumbotron">
-    <div *ngIf="IsCreate || IsUpdate || IsGetPassword; else elseBlock">
+    <div *ngIf="IsCreate || IsUpdate || IsGetPassword">
       <form (ngSubmit)="onSubmit()" #passwordForm="ngForm" autocomplete="off">
         <div class="form-group">
           <label for="">Ім'я</label>
-          <input type="text" [(ngModel)]="newPassword.namePassword" name="namePassword" class="form-control" id="name"
+          <input type="text" (change)="checkName()" [(ngModel)]="newPassword.namePassword" name="namePassword" class="form-control" id="name"
             ngModel namePassword #namePassword="ngModel" [readonly]="IsGetPassword" required>
-          <div *ngIf="!IsGetPassword && namePassword.invalid && (namePassword.dirty || namePassword.touched)"
+          <div *ngIf="(!IsGetPassword && namePassword.invalid && (namePassword.dirty || namePassword.touched))"
             class="alert alert-danger">
             <div *ngIf="namePassword.errors!.required">
               Потрібно вказати ім’я.
@@ -19,10 +19,13 @@
         <div *ngIf="IsGetPassword || IsResetPassword" class="form-group">
           <label for="">Поточний пароль</label>
           <input type="password" [(ngModel)]="newPassword.oldPassword" name="oldPassword" class="form-control"
-            id="oldPassword" ngModel oldPassword #oldPassword="ngModel" required>
+            id="oldPassword" minlength="2" ngModel oldPassword #oldPassword="ngModel" required>
           <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="alert alert-danger">
             <div *ngIf="oldPassword.errors!.required">
               Потрібний поточний пароль.
+            </div>
+            <div *ngIf="oldPassword.errors?.minlength">
+              Пароль повинен містити щонайменше 2 символи.
             </div>
           </div>
         </div>
@@ -30,10 +33,14 @@
           <div class="form-group">
             <label for="">Новий пароль</label>
             <input type="text" [(ngModel)]="newPassword.newPassword" name="newPasswords" class="form-control"
-              id="newPasswords" ngModel newPasswords #newPasswords="ngModel" required>
-            <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)" class="alert alert-danger">
+              id="newPasswords" minlength="2" ngModel newPasswords #newPasswords="ngModel" required>
+            <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)"
+              class="alert alert-danger">
               <div *ngIf="newPasswords.errors!.required">
                 Потрібен новий пароль.
+              </div>
+              <div *ngIf="newPasswords.errors?.minlength">
+                Пароль повинен містити щонайменше 2 символи.
               </div>
             </div>
           </div>
@@ -69,15 +76,27 @@
             </div>
           </div>
         </div>
+        <div *ngIf="uniqPassword && !IsGetPassword" class="form-group">
+          <label for="">Для підбору вашого пароля буде потрібно ...</label>
+          <div class="input-group">
+            <input type="text" class="form-control" value="{{aboutPassword}}" #formInputText readonly>
+          </div>
+        </div>
+        <div *ngIf="isRequest" class="form-group">
+          <img src="/assets/images/200.gif" style="max-height: 100px; max-width: 100px;" />
+          <h2>зачекайте</h2>
+        </div>
         <div class="form-group">
-          <button class="btn btn-success margin-right" [disabled]="!passwordForm.form.valid || (!IsResetPassword && !(newPassword.namePassword != password.namePassword))" type="submit">Надіслати</button>
+          <button class="btn btn-success margin-right"
+            [disabled]="!passwordForm.form.valid || (!IsResetPassword && !(newPassword.namePassword != password.namePassword))"
+            type="submit">Надіслати</button>
           <button class="btn btn-danger margin-right" (click)="CanselForm()">Скасувати</button>
         </div>
       </form>
     </div>
-    <ng-template #elseBlock>
+    <div *ngIf="content">
       <p>{{ content }}</p>
-    </ng-template>
+    </div>
   </header>
   <button class="btn btn-primary" (click)="AddPassword()"> Додати пароль</button>
   <div *ngIf="passwords.length != 0">

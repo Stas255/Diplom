@@ -5,10 +5,13 @@
         <div class="form-group">
           <label for="">Пароль</label>
           <input type="text" [(ngModel)]="password.newPassword" name="newPasswords" class="form-control"
-            id="newPasswords" ngModel newPasswords #newPasswords="ngModel" required>
+            id="newPasswords" minlength="2" ngModel newPasswords #newPasswords="ngModel" required>
           <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)" class="alert alert-danger">
             <div *ngIf="newPasswords.errors!.required">
               Потрібен пароль.
+            </div>
+            <div *ngIf="newPasswords.errors?.minlength">
+              Пароль повинен містити щонайменше 2 символи.
             </div>
           </div>
         </div>
@@ -16,6 +19,12 @@
           <label for="">Унікальний пароль</label>
           <div class="input-group">
             <input type="text" id="uniqPassword" class="form-control" value="{{uniqPassword}}" #formInputText readonly>
+          </div>
+        </div>
+        <div *ngIf="uniqPassword" class="form-group">
+          <label for="">Для підбору вашого пароля буде потрібно ...</label>
+          <div class="input-group">
+            <input type="text" class="form-control" value="{{aboutPassword}}" #formInputText readonly>
           </div>
         </div>
         <div class="form-group">

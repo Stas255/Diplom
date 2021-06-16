@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Password } from '../model/Password';
 import { Message } from '../model/UserMessage';
 import { BlockedUser } from '../model/BlockedUser';
+import { Observable } from 'rxjs';
+import { timeout} from 'rxjs/operators';
 
+/*const API_URL = 'http://zheka.tolstonozhenko.com.ua/api/';
+const API_URL_USER = 'http://zheka.tolstonozhenko.com.ua/api/user/';*/
 const API_URL = 'http://localhost:8000/api/';
 const API_URL_USER = 'http://localhost:8000/api/user/';
+const C_URL = 'http://localhost:8000/';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +34,9 @@ export class UserService {
     return this.http.post(API_URL_USER + 'getpassword', {
       passwordId: password.id,
       password: password.oldPassword
-    }, { responseType: 'text' });
+    }, { responseType: 'text' }).pipe(
+      timeout(20000)
+    );
   }
 
   resetPassword(password: Password, isResetPassword: boolean): Observable<string> {
@@ -100,6 +106,15 @@ export class UserService {
   deleteFile(fileName: string): Observable<string> {
     return this.http.post(API_URL + 'admin/deleteSystemFileMessage', {
       fileName: fileName
-    }, { responseType: 'text' });
+    }, { responseType: 'text' }).pipe(
+      timeout(2000)
+    );
+  }
+
+  getInforAboutServers(): Observable<any> {
+    return this.http.post(C_URL + 'getInfor', { responseType: 'json' })
+    .pipe(
+      timeout(2000)
+    );
   }
 }

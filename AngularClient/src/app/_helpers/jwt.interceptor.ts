@@ -24,8 +24,10 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           if (error.error instanceof ErrorEvent) {
             errorMessage = `Error: ${error.error.message}`;
           } else {
-            if ((error.status == 400 && error.error.message == "User not exist") || (error.status == 403 && error.error.message == "No token provided!") || error.status == 401) {
+            if ((error.status == 400 && error.error.message == "User not exist") || (error.status == 403 && error.error.message == "No token provided!")|| (error.status == 401 && error.error == "Time working token lost!")) {
               this.token.signOut();
+              errorMessage = `Message: ${error.error}`;
+              alert(errorMessage);
               this.router.navigate(['/login']).then(() => {
                 window.location.reload();
               });
@@ -39,7 +41,6 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               errorMessage = `Error Code: ${error.status}\nMessage: ${error.error}`;
             }
           }
-          window.alert(errorMessage);
           return throwError(error);
         })
       )

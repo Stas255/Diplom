@@ -22,6 +22,8 @@ import { BlockedComponent } from './blocked/blocked.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { BugReportSystemComponent } from './bug-report-system/bug-report-system.component';
 
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,7 +53,8 @@ import { BugReportSystemComponent } from './bug-report-system/bug-report-system.
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,
       multi: true
-    }
+    },
+    {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

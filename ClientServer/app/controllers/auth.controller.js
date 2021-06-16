@@ -43,8 +43,7 @@ exports.signin = (req, res) => {
             );
 
             if (!passwordIsValid) {
-                return res.status(401).send({
-                    accessToken: null,
+                return res.status(404).send({
                     message: "Недійсний пароль!"
                 });
             }
