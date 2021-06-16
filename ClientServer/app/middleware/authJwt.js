@@ -3,6 +3,7 @@ const config = require("../config/auth.config.js");
 const db = require("../models");
 const User = db.user;
 const BlockedUser = db.blockedUser;
+var bcrypt = require("bcryptjs");
 
 function verifyToken(req, res, next) {
 	let token = req.headers["x-access-token"];
@@ -68,7 +69,7 @@ function isUser(req, res, next) {
 							next();
 							return;
 						} else {
-							var description = 'Вас заблокували через ' + blocked.description + '\n Ви можете відправити лише про одне повідомлення\n' + (blocked.sentMessage?'Ви вже надіслали':''); 
+							var description = 'Вас заблокували через ' + blocked.description + '\n Ви можете відправити лише про одне повідомлення\n' + (blocked.sentMessage ? 'Ви вже надіслали' : '');
 							if (res.req.originalUrl == "/api/user/sendmessage") {
 								if (!blocked.sentMessage) {
 									blocked.update({
@@ -115,10 +116,30 @@ function isBlocked(req, res, next) {
 	});
 };
 
+function isUserForUpdate(req, res, next) {
+	User.findByPk(req.userId).then(user => {
+		if(!user){
+			res.status(404).send("Користувача не знайдено");
+		return;
+		}
+		var passwordIsValid = bcrypt.compareSync(
+			req.body.oldPassword,
+			user.password
+		);
+		if (user.email == req.body.email && passwordIsValid) {
+			next();
+			return;
+		}
+		res.status(404).send("Дані невірні");
+		return;
+	});
+};
+
 const authJwt = {
 	verifyToken: verifyToken,
 	isAdmin: isAdmin,
 	isUser: isUser,
-	isBlocked: isBlocked
+	isBlocked: isBlocked,
+	isUserForUpdate: isUserForUpdate
 };
 module.exports = authJwt;

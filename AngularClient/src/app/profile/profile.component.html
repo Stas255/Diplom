@@ -1,24 +1,71 @@
-<div class="container" *ngIf="currentUser; else loggedOut">
+<div class="container" *ngIf="user; else loggedOut">
     <header class="jumbotron">
       <h3>
-        <strong>{{ currentUser.username }}</strong> Профіль
+        <strong>{{ user.username }}</strong> Профіль
       </h3>
-    </header>
-    <p>
-      <strong>Token:</strong>
-      {{ currentUser.accessToken.substring(0, 20) }} ...
-      {{ currentUser.accessToken.substr(currentUser.accessToken.length - 20) }}
-    </p>
-    <p>
-      <strong>Email:</strong>
-      {{ currentUser.email }}
-    </p>
-    <strong>Roles:</strong>
-    <ul>
-      <li *ngFor="let role of currentUser.roles">
-        {{ role }}
-      </li>
-    </ul>
+      <p>
+        <strong>Email:</strong>
+        {{ user.email }}
+      </p>
+      <form (ngSubmit)="onSubmit()" #passwordForm="ngForm" autocomplete="off">
+        <div class="form-group">
+          <label for="">Поточний пароль</label>
+          <input type="password" [(ngModel)]="user.oldPassword" name="oldPassword" class="form-control"
+            id="oldPassword" minlength="6" ngModel oldPassword #oldPassword="ngModel" required>
+          <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="alert alert-danger">
+            <div *ngIf="oldPassword.errors!.required">
+              Потрібний поточний пароль.
+            </div>
+            <div *ngIf="oldPassword.errors?.minlength">
+              Пароль повинен містити щонайменше 6 символи.
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label for="">Новий пароль</label>
+            <input type="text" [(ngModel)]="user.newPassword" name="newPasswords" class="form-control"
+              id="newPasswords" minlength="6" ngModel newPasswords #newPasswords="ngModel" required>
+            <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)"
+              class="alert alert-danger">
+              <div *ngIf="newPasswords.errors!.required">
+                Потрібен новий пароль.
+              </div>
+              <div *ngIf="newPasswords.errors?.minlength">
+                Пароль повинен містити щонайменше 6 символи.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="">Підтвердіть новий пароль</label>
+            <input type="password" [(ngModel)]="user.confirmNewPassword" name="ConfirmNewPassword"
+              class="form-control" id="ConfirmNewPassword" pattern="{{ newPasswords.value }}" ngModel newPassword
+              #ConfirmNewPassword="ngModel" required>
+            <div *ngIf="ConfirmNewPassword.invalid && (ConfirmNewPassword.dirty || ConfirmNewPassword.touched)"
+              class="alert alert-danger">
+              <div *ngIf="ConfirmNewPassword.errors!.required">
+                Потрібно підтвердити пароль.
+              </div>
+              <div *ngIf="ConfirmNewPassword.errors!.pattern">
+                Новий пароль і пароль не збігаються.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isRequest" class="form-group">
+          <img src="/assets/images/200.gif" style="max-height: 100px; max-width: 100px;" />
+          <h2>зачекайте</h2>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-success margin-right"
+            [disabled]="!passwordForm.form.valid"
+            type="submit">Надіслати</button>
+        </div>
+      </form>
+      <div *ngIf="content">
+        <p>{{ content }}</p>
+      </div>
+    </header> 
   </div>
   
   <ng-template #loggedOut>

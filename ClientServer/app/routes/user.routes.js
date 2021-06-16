@@ -106,4 +106,10 @@ module.exports = function (app) {
 		socketMain.deleteSystemFileMessage
 	);
 
+	app.post(
+		"/api/user/updateUser",
+		[authJwt.verifyToken, authJwt.isUserForUpdate],
+		controller.updateUser
+	);
+
 };

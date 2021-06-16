@@ -28,6 +28,7 @@ export class BoardUserComponent implements OnInit {
   isNewName = true;
   newPassword: Password = new Password('', '', '', '', '');
   aboutPassword = '';
+  passwordName = '';
 
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
 
@@ -67,7 +68,7 @@ export class BoardUserComponent implements OnInit {
     this.IsUpdate = !this.IsUpdate;
     this.password = this.passwords.find(x => x.id == id)!;
     this.newPassword = Object.assign({}, this.password);
-
+    this.passwordName = this.newPassword.namePassword;
   }
 
   AddPassword(): void {
@@ -86,14 +87,15 @@ export class BoardUserComponent implements OnInit {
     this.newPassword = new Password('', '', '', '', '');
     this.uniqPassword = '';
     this.content = '';
-    this.aboutPassword ='';
+    this.aboutPassword = '';
+    this.passwordName = '';
   }
 
   onSubmit() {
     this.isRequest = true;
     this.content = '';
     if (this.IsCreate) {
-      if(this.checkName()){
+      if (this.checkName()) {
         this.isRequest = false;
         return;
       }
@@ -135,27 +137,34 @@ export class BoardUserComponent implements OnInit {
     }
   }
 
-  checkName(){
-    for(var i =0; i < this.passwords.length;i++){
-      if(this.passwords[i].namePassword == this.newPassword.namePassword){
-        alert('Для зручності вкажіть інше ім\'я пароля');
-        this.newPassword.namePassword = '';
-        return true;
+  checkName() {
+    for (var i = 0; i < this.passwords.length; i++) {
+      if (this.passwords[i].namePassword == this.newPassword.namePassword) {
+        if (this.newPassword.namePassword != this.passwordName) {
+          if (this.IsUpdate) {
+            this.newPassword.namePassword = this.passwordName;
+            alert('Для зручності вкажіть інше ім\'я пароля');
+          }else {
+            alert('Для зручності вкажіть інше ім\'я пароля');
+            this.newPassword.namePassword = '';
+          }
+          return true;
+        }
       }
     }
     return false;
   }
 
-  AboutPassword(){
+  AboutPassword() {
     var test = zxcvbn(this.uniqPassword);
     this.aboutPassword = toWords(test.crack_time);
   }
 
-  checkError(err){
+  checkError(err) {
     this.isRequest = false;
-    if(err.message == "Timeout has occurred"){
+    if (err.message == "Timeout has occurred") {
       this.content = "Час дії запиту вичерпаний. Оновіть сторінку. та спробуйте";
-    }else{
+    } else {
       this.content = JSON.parse(err.error).message;
     }
 

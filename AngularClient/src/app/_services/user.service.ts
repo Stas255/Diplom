@@ -5,6 +5,7 @@ import { Message } from '../model/UserMessage';
 import { BlockedUser } from '../model/BlockedUser';
 import { Observable } from 'rxjs';
 import { timeout} from 'rxjs/operators';
+import { Profile } from '../model/Profile';
 
 /*const API_URL = 'http://zheka.tolstonozhenko.com.ua/api/';
 const API_URL_USER = 'http://zheka.tolstonozhenko.com.ua/api/user/';*/
@@ -115,6 +116,17 @@ export class UserService {
     return this.http.post(C_URL + 'getInfor', { responseType: 'json' })
     .pipe(
       timeout(2000)
+    );
+  }
+
+  updateUser(user: Profile) : Observable<string> {
+    return this.http.post(API_URL_USER + 'updateUser',{
+      email: user.email,
+      oldPassword: user.oldPassword,
+      newPassword: user.newPassword
+    }, { responseType: 'text' })
+    .pipe(
+      timeout(20000)
     );
   }
 }

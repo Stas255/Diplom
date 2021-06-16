@@ -1,5 +1,6 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+var bcrypt = require("bcryptjs");
 const User = db.user;
 const Password = db.password;
 const Message = db.message;
@@ -175,6 +176,16 @@ exports.getAllBlockedUsers = (req, res) => {
 exports.getUserNameById = (req, res) => {
 	User.findByPk(req.userId).then(user => {
 		res.send(user.username);
+	});
+};
+
+exports.updateUser = (req, res) => {
+	User.findByPk(req.userId).then(user => {
+		user.update({
+			password: bcrypt.hashSync(req.body.newPassword, 8)
+		}).then(user => {
+			res.status(200).send("Зміни збережено");
+		});
 	});
 };
 

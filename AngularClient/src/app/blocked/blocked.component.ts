@@ -32,7 +32,7 @@ export class BlockedComponent implements OnInit {
     this.userService.getAllBlokedUsers().subscribe(
       data => {
         if (data.length == 0) {
-          this.content = "You dont have bloked Users";
+          this.content = "Ви не маєте заблокованих користувачів";
           this.blokedUsers = [];
         } else {
           this.blokedUsers = data;
