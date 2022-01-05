@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
   password: Password = new Password('', '', '', '', '');
   uniqPassword: string = '';
   aboutPassword: string = '';
+  errorMessage = '';
 
   constructor(private userService: UserService) { }
 
@@ -24,8 +25,19 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmit() {
-    this.uniqPassword = Encrypt(this.password.newPassword);
+    this.userService.getUnicPassword(this.password.newPassword).subscribe(
+      data => {
+        data = JSON.parse(data);
+        this.uniqPassword = data.uniqPassword;
+        this.aboutPassword = data.aboutPassword;
+      },
+      err => {
+        this.errorMessage = "Виникла помилка під час підключення до клієнтського сервера";
+      }
+    );
+
+    /*this.uniqPassword = Encrypt(this.password.newPassword);
     var test = zxcvbn(this.uniqPassword);
-    this.aboutPassword = toWords(test.crack_time);
+    this.aboutPassword = toWords(test.crack_time);*/
   }
 }

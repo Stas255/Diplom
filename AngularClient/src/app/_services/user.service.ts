@@ -11,6 +11,7 @@ import { Profile } from '../model/Profile';
 const API_URL_USER = 'http://zheka.tolstonozhenko.com.ua/api/user/';*/
 const API_URL = 'http://localhost:8000/api/';
 const API_URL_USER = 'http://localhost:8000/api/user/';
+const API_URL_SIMPLE = 'http://localhost:8000/simple/getUnicPassword/';
 const C_URL = 'http://localhost:8000/';
 
 @Injectable({
@@ -124,6 +125,15 @@ export class UserService {
       email: user.email,
       oldPassword: user.oldPassword,
       newPassword: user.newPassword
+    }, { responseType: 'text' })
+    .pipe(
+      timeout(20000)
+    );
+  }
+
+  getUnicPassword(password: String): Observable<any>{
+    return this.http.post(API_URL_SIMPLE,{
+      password: password,
     }, { responseType: 'text' })
     .pipe(
       timeout(20000)

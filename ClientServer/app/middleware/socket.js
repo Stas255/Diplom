@@ -1,6 +1,6 @@
 function savePasswordOnMainServer(req, res, next){
     var socket = req.io;
-	var rsa = req.rsa;client
+	var rsa = req.rsa;
 	var client = req.client;
     var user = {
 		id: req.userId,

@@ -2,7 +2,7 @@ var app = require('express')();
 const { networkInterfaces } = require('os');
 var server = require('http').Server(app);
 const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://User:User@cluster.bl5br.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true });
+mongoose.connect("mongodb://localhost:27017/test", { useUnifiedTopology: true, useNewUrlParser: true });
 const { RSA, Keys } = require('./app/crypt/rsa');
 const { Client } = require('./app/config/Client');
 

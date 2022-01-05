@@ -9,12 +9,12 @@
   "scripts": {
     "dev": "SET PORT=8000 && nodemon server.js",
     "debug": "nodemon --inspect server.js",
-    "start": "SET PORT=8000 && nodemon server.js --exec babel-node"
+    "start": "SET PORT=8000 && nodemon server.js --exec babel-cli"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
     "big-integer": "^1.6.48",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -24,7 +24,8 @@
     "socket.io-client": "^4.1.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.14.3",
+    "@babel/cli": "^7.16.7",
+    "@babel/core": "^7.16.7",
     "@babel/node": "^7.14.2",
     "@babel/preset-env": "^7.14.2"
   }

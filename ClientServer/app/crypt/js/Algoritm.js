@@ -3,7 +3,7 @@ String.prototype.count = function (s1) {
 }
 
 
-Encrypt = function (password) {
+exports.Encrypt = function (password) {
 	var hash = Math.random().toString(36).substring(2);
 	var numbers = Array.from({ length: 2 }, () => Math.floor(Math.random() * 9) + 3);
 	var i = 0;

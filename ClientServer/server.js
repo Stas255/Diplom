@@ -10,7 +10,7 @@ const app = express();
 let client;
 let rsa;
 let Mainkeys;
-let connectToMainServer = false;
+let connectToMainServer = false; 
 let NumberRe = 0;
 
 const db = require("./app/models");
@@ -124,6 +124,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
+require('./app/routes/simple.routes')(app);
 app.post('/getInfor', (req, res) => {
 	res.send({ "mainServer": connectToMainServer });
 	if(NumberRe >= 5 || !socket){
