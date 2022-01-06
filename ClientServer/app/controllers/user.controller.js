@@ -68,7 +68,7 @@ exports.getPasswords = (req, res) => {
 						namePassword: passwords[i].name
 					});
 				}
-				res.send(passwordsResult);
+				res.status(200).send(passwordsResult);
 			} else {
 				res.status(200).send(passwordsResult);
 			}
