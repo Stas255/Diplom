@@ -135,7 +135,7 @@ const fs = require('fs');
 process.on('uncaughtException', function (err) {
 	if (err.code != 'ENOENT') {
 		var d = new Date();
-		fs = require('fs');
+
 		var datestring = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + "-" + d.getHours() + "." + d.getMinutes() + "." + d.getSeconds() + "." + d.getMilliseconds();
 		fs.writeFileSync(__dirname + "/app/storage/bugs/" + datestring + ".json", JSON.stringify(err, Object.getOwnPropertyNames(err)), { flag: 'w' }, function (err) {
 		});
