@@ -1,12 +1,6 @@
 var app = require('express')();
 const { networkInterfaces } = require('os');
 var server = require('http').Server(app);
-const mongoose = require("mongoose");
-mongoose.connect("mongodb+srv://User:NdqUkLcTMwzJKyAz@cluster.bl5br.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
-	useNewUrlParser: true,
-	useUnifiedTopology: true })   
-.then(() => console.log("Database connected!"))
-.catch(err => console.log(err));
 const { RSA, Keys } = require('./app/crypt/rsa');
 const { Client } = require('./app/config/Client');
 

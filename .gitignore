@@ -338,6 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-/MainServer/app/storage/bugs/*
+/MainServer/app/storage/bugs/*.json
+/MainServer/app/storage/db/*.json
+/ClientServer/app/storage/bugs/*.json
 ClientServer.zip
 MainServer.zip
