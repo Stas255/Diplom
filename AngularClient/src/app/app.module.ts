@@ -23,6 +23,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { BugReportSystemComponent } from './bug-report-system/bug-report-system.component';
 
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { QRCodeModule } from 'angularx-qrcode';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     HttpClientModule,
     ClipboardModule,
     FontAwesomeModule,
-    NgbModule
+    NgbModule,
+    QRCodeModule 
   ],
   providers: [
     authInterceptorProviders,

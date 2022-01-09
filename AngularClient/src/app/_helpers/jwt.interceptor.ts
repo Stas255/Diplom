@@ -33,6 +33,8 @@ export class HttpErrorInterceptor implements HttpInterceptor {
               });
               errorMessage = `Message: ${error.error}`;
             } else if(error.status == 403) {
+              errorMessage = `Message: ${error.error}`;
+              alert(errorMessage);
               this.router.navigate(['/']).then(() => {
                 window.location.reload();
               });

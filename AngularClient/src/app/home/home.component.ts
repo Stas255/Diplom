@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Password } from '../model/Password';
+import { TokenStorageService } from '../_services/token-storage.service';
 import { UserService } from '../_services/user.service';
 
 declare function Encrypt(params: string): any;
@@ -18,10 +20,17 @@ export class HomeComponent implements OnInit {
   uniqPassword: string = '';
   aboutPassword: string = '';
   errorMessage = '';
+  myAngularxQrCode: string = this.getRandomString(50);
+  isLogined = false;
 
-  constructor(private userService: UserService) { }
+  constructor( private tokenStorage: TokenStorageService,private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
+    if (!this.tokenStorage.getToken()) {
+      this.createQR();
+    }else{
+      this.isLogined = true;
+    }
   }
 
   onSubmit() {
@@ -40,4 +49,29 @@ export class HomeComponent implements OnInit {
     var test = zxcvbn(this.uniqPassword);
     this.aboutPassword = toWords(test.crack_time);*/
   }
+
+  createQR(){
+    this.userService.setResponse(this.myAngularxQrCode).subscribe(
+      data => {
+        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveUser(data);
+
+        this.router.navigate(['/']).then(() => {
+          window.location.reload();
+        });
+      },
+      err => {
+        this.errorMessage = "Виникла помилка під час підключення до клієнтського сервера";
+      }
+    );
+  }
+
+  getRandomString(length) {
+    var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = '';
+    for ( var i = 0; i < length; i++ ) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+    return result;
+}
 }

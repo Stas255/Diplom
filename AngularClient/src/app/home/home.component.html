@@ -34,4 +34,7 @@
         </div>
     </form>
   </header>
+  <div style="text-align: center;" [hidden]="isLogined">
+    <qrcode [qrdata]="myAngularxQrCode" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+  </div>
 </div>

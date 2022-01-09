@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Password } from '../model/Password';
 import { Message } from '../model/UserMessage';
 import { BlockedUser } from '../model/BlockedUser';
@@ -138,5 +138,11 @@ export class UserService {
     .pipe(
       timeout(20000)
     );
+  }
+
+  setResponse(myAngularxQrCode: string): Observable<any> {
+    return this.http.post(C_URL + 'qr/setResponse', {
+      idQR: myAngularxQrCode,
+    },{headers: new HttpHeaders({ 'Content-Type': 'application/json' })});
   }
 }
