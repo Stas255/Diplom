@@ -4,11 +4,6 @@ var qrCode = new Storage('./app/storage/qrs/qr.json');
 class ArrayQR {
 
     constructor() {
-
-        // It store the length of array.
-        this.length = 0;
-
-        // Object to store elements.
         this.data = {};
     }
 
@@ -17,7 +12,6 @@ class ArrayQR {
             element: element,
             date: date
         };
-        this.length++;
         return this.data;
     }
 
@@ -26,18 +20,29 @@ class ArrayQR {
     }
 
     deleteAt(index) {
-        for (let i = index; i < this.length - 1; i++) {
-            this.data[i] = this.data[i + 1];
-        }
-        delete this.data[this.length - 1];
-        this.length--;
-        return this.data;
+        delete this.data[index];
     }
 
+    update(){
+        for(var id in this.data) {
+            let element = this.getElementAtIndex(id);
+            if (Math.abs(new Date() - element.date) > the_interval) {
+                this.deleteAt(id);
+            }
+         }
+    }
 
 }
-
 var arrayQR = new ArrayQR();
+
+
+var minutes = 5, the_interval = minutes * 60 * 1000;
+setInterval(function() {
+  console.log("I am doing my 5 minutes check");
+  arrayQR.update();
+}, the_interval);
+
+
 
 exports.setResponse = (req, res) => {
     arrayQR.push(req.body.idQR, res, new Date());
@@ -46,11 +51,11 @@ exports.setResponse = (req, res) => {
 exports.returnResponse = (req, res) => {
     let qr = arrayQR.getElementAtIndex(req.body.idQR);
     if (!qr) {
-        res.send({
-            message: "cannot find"
+        res.status(403).send({
+            message: "Cannot find Or Qr is old"
         });
     } else {
-        if (Math.abs(new Date() - qr.date) < 5000000) {
+        if (Math.abs(new Date() - qr.date) < the_interval) {
             arrayQR.deleteAt(req.body.idQR);
             let result = JSON.parse(req.body.user);
             qr.element.send(result);
@@ -58,10 +63,11 @@ exports.returnResponse = (req, res) => {
                 message: "Registered"
             });
         }else{
-            qr.element.send({
-                error: "Timeout"
+            arrayQR.deleteAt(req.body.idQR);
+            qr.element.status(403).send({
+                message: "Timeout"
             });
-            res.send({
+            res.status(403).send({
                 message: "Timeout"
             });
         }

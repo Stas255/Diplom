@@ -22,13 +22,17 @@ export class HomeComponent implements OnInit {
   errorMessage = '';
   myAngularxQrCode: string = this.getRandomString(50);
   isLogined = false;
+  id: any;
 
-  constructor( private tokenStorage: TokenStorageService,private userService: UserService, private router: Router) { }
+  constructor(private tokenStorage: TokenStorageService, private userService: UserService, private router: Router) { }
 
   ngOnInit(): void {
     if (!this.tokenStorage.getToken()) {
-      this.createQR();
-    }else{
+      this.createQR(this.getRandomString(50));
+      this.id = setInterval(() => {
+        this.createQR(this.getRandomString(50));
+      }, 5 * 60 * 1000);
+    } else {
       this.isLogined = true;
     }
   }
@@ -50,7 +54,8 @@ export class HomeComponent implements OnInit {
     this.aboutPassword = toWords(test.crack_time);*/
   }
 
-  createQR(){
+  createQR(id: string) {
+    this.myAngularxQrCode = id;
     this.userService.setResponse(this.myAngularxQrCode).subscribe(
       data => {
         this.tokenStorage.saveToken(data.accessToken);
@@ -69,9 +74,14 @@ export class HomeComponent implements OnInit {
   getRandomString(length) {
     var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var result = '';
-    for ( var i = 0; i < length; i++ ) {
-        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    for (var i = 0; i < length; i++) {
+      result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
     }
     return result;
-}
+  }
+  ngOnDestroy() {
+    if (this.id) {
+      clearInterval(this.id);
+    }
+  }
 }

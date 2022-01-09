@@ -24,23 +24,23 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           if (error.error instanceof ErrorEvent) {
             errorMessage = `Error: ${error.error.message}`;
           } else {
-            if ((error.status == 400 && error.error.message == "User not exist") || (error.status == 403 && error.error.message == "No token provided!")|| (error.status == 401 && error.error == "Time working token lost!")) {
+            if ((error.status == 400 && error.error.message == "User not exist") || (error.status == 403 && error.error.message == "No token provided!")|| (error.status == 401 && error.error.message == "Time working token lost!")) {
               this.token.signOut();
-              errorMessage = `Message: ${error.error}`;
+              errorMessage = `Message: ${error.error.message}`;
               alert(errorMessage);
               this.router.navigate(['/login']).then(() => {
                 window.location.reload();
               });
               errorMessage = `Message: ${error.error}`;
             } else if(error.status == 403) {
-              errorMessage = `Message: ${error.error}`;
+              errorMessage = `Message: ${error.error.message}`;
               alert(errorMessage);
               this.router.navigate(['/']).then(() => {
                 window.location.reload();
               });
-              errorMessage = `Message: ${error.error}`;
+              errorMessage = `Message: ${error.error.message}`;
             }else{
-              errorMessage = `Error Code: ${error.status}\nMessage: ${error.error}`;
+              errorMessage = `Error Code: ${error.status}\nMessage: ${error.error.message}`;
             }
           }
           return throwError(error);

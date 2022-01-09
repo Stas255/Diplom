@@ -17,9 +17,13 @@ function verifyToken(req, res, next) {
 	jwt.verify(token, config.secret, (err, decoded) => {
 		if (err) {
 			if (err.message == 'jwt expired') {
-				return res.status(401).send("Time working token lost!");
+				return res.status(401).send({
+					message: "Time working token lost!"
+				});
 			}
-			return res.status(401).send("Unauthorized!");
+			return res.status(401).send({
+				message: "Unauthorized"
+			});
 		}
 		req.userId = decoded.id;
 		isUserExist(req, res, next);
@@ -69,7 +73,7 @@ function isUser(req, res, next) {
 							next();
 							return;
 						} else {
-							var description = 'Вас заблокували через ' + blocked.description + '\n Ви можете відправити лише про одне повідомлення\n' + (blocked.sentMessage ? 'Ви вже надіслали' : '');
+							var description = 'Вас заблокували через ' + blocked.description + '\n Ви можете відправити лише одне повідомлення\n' + (blocked.sentMessage ? 'Ви вже надіслали' : '');
 							if (res.req.originalUrl == "/api/user/sendmessage") {
 								if (!blocked.sentMessage) {
 									blocked.update({
@@ -79,11 +83,15 @@ function isUser(req, res, next) {
 										return;
 									});
 								} else {
-									res.status(403).send(description);
+									res.status(403).send({
+										message: description
+									});
 									return;
 								}
 							} else {
-								res.status(403).send(description);
+								res.status(403).send({
+									message: description
+								});
 								return;
 							}
 						}

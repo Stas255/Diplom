@@ -8,6 +8,7 @@
   },
   "scripts": {
     "dev": "SET PORT=8000 && nodemon server.js",
+    "dev2": "SET PORT=8000 && node server.js",
     "debug": "nodemon --inspect server.js",
     "start": "SET PORT=8000 && nodemon server.js --exec babel-cli"
   },
