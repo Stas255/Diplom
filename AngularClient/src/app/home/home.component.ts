@@ -33,6 +33,9 @@ export class HomeComponent implements OnInit {
         this.createQR(this.getRandomString(50));
       }, 5 * 60 * 1000);
     } else {
+      if (this.id) {
+      clearInterval(this.id);
+    }
       this.isLogined = true;
     }
   }

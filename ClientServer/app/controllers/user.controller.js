@@ -149,6 +149,10 @@ exports.cancelBlock = (req, res) => {
 			userId: req.body.userId
 		}
 	}).then(result => {
+		if(result == 0){
+			res.status(403).send("Something went wrong");
+			return;
+		}
 		res.status(200).send("Розблоковано");
 	});
 };
