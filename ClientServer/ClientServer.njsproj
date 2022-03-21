@@ -4,6 +4,13 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <Name>ClientServer</Name>
     <RootNamespace>ClientServer</RootNamespace>
+    <SaveNodeJsSettingsInProjectFile>True</SaveNodeJsSettingsInProjectFile>
+    <NodeExePath>
+    </NodeExePath>
+    <NodeExeArguments>
+    </NodeExeArguments>
+    <DebuggerPort>
+    </DebuggerPort>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -18,8 +25,8 @@
     <OutputPath>.</OutputPath>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
-    <NodejsPort>1337</NodejsPort>
-    <StartWebBrowser>true</StartWebBrowser>
+    <NodejsPort>8080</NodejsPort>
+    <StartWebBrowser>False</StartWebBrowser>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -28,9 +35,53 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="app\config\auth.config.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\config\db.config.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\controllers\auth.controller.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\controllers\user.controller.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\middleware\authJwt.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\middleware\index.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\middleware\verifySignUp.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\models\index.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\models\role.model.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\models\user.model.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\routes\auth.routes.js">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="app\routes\user.routes.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\" />
+    <Folder Include="app\config\" />
+    <Folder Include="app\middleware\" />
+    <Folder Include="app\controllers\" />
+    <Folder Include="app\models\" />
+    <Folder Include="app\routes\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

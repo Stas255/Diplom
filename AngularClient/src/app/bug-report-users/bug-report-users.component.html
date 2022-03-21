@@ -1,0 +1,25 @@
+<div class="container">
+  <header class="jumbotron">
+    <p>{{ content }}</p>
+  </header>
+</div>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Назва</th>
+      <th>Ім'я користувача</th>
+      <th>Дії</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let messag of messages">
+      <td> {{ messag.name }}</td>
+      <td> {{ messag.userName }}</td>
+      <td>
+        <button class="btn btn-primary button-margin-right" (click)="selectMessage(messag.id)"> Показати деталі</button>
+        <button class="btn btn-danger" (click)="deleteMessage(messag.id)"> Видалити</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

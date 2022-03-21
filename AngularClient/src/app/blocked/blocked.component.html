@@ -1,0 +1,24 @@
+<div class="container">
+    <header class="jumbotron">
+        {{content}}
+    </header>
+    <div *ngIf="blokedUsers.length != 0">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Ім'я користувача</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of blokedUsers">
+                    <td>{{user.userName}}</td>
+                    <td>
+                        <button class="btn btn-primary margin-right" (click)="GetDescription(user.id)">Причина блокування</button>
+                        <button class="btn btn-primary" (click)="CancelBlock(user.userId)"> Розблокувати</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
