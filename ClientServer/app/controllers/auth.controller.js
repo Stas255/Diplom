@@ -16,24 +16,10 @@ exports.signup = (req, res) => {
         password: bcrypt.hashSync(req.body.password, 8)
     })
         .then(user => {
-            if (req.body.roles) {
-                Role.findAll({
-                    where: {
-                        name: {
-                            [Op.or]: req.body.roles
-                        }
-                    }
-                }).then(roles => {
-                    user.setRoles(roles).then(() => {
-                        res.send({ message: "User was registered successfully!" });
-                    });
-                });
-            } else {
-                // user role = 1
-                user.setRoles([1]).then(() => {
-                    res.send({ message: "User was registered successfully!" });
-                });
-            }
+            // user role = 1
+            user.setRoles([1]).then(() => {
+                res.send({ message: "Користувач був успішно зареєстрований!" });
+            });
         })
         .catch(err => {
             res.status(500).send({ message: err.message });
@@ -43,12 +29,12 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
     User.findOne({
         where: {
-            username: req.body.username
+            email: req.body.email
         }
     })
         .then(user => {
             if (!user) {
-                return res.status(404).send({ message: "User Not found." });
+                return res.status(404).send({ message: "Користувач не знайдений." });
             }
 
             var passwordIsValid = bcrypt.compareSync(
@@ -57,14 +43,14 @@ exports.signin = (req, res) => {
             );
 
             if (!passwordIsValid) {
-                return res.status(401).send({
-                    accessToken: null,
-                    message: "Invalid Password!"
+                return res.status(404).send({
+                    message: "Недійсний пароль!"
                 });
             }
 
             var token = jwt.sign({ id: user.id }, config.secret, {
-                expiresIn: 86400 // 24 hours
+                //expiresIn: 900 // 15 min
+                expiresIn: 900
             });
 
             var authorities = [];

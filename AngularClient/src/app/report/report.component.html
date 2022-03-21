@@ -1,0 +1,26 @@
+<form (ngSubmit)="onSubmit()" #messageForm="ngForm" autocomplete="off">
+    <div class="form-group">
+        <label for="">Ім'я</label>
+        <input type="text" [(ngModel)]="message.name" name="nameMessage" class="form-control" id="nameMessage" ngModel
+            nameMessage #nameMessage="ngModel" required>
+        <div *ngIf="nameMessage.invalid && (nameMessage.dirty || nameMessage.touched)" class="alert alert-danger">
+            <div *ngIf="nameMessage.errors!.required">
+                Потрібно вказати ім’я.
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="">Опис</label>
+        <textarea [(ngModel)]="message.description" name="description" class="form-control" id="description" ngModel
+        description #description="ngModel" required></textarea>
+        <div *ngIf="description.invalid && (description.dirty || description.touched)" class="alert alert-danger">
+            <div *ngIf="description.errors!.required">
+                Опис обов’язковий.
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <button class="btn btn-success margin-right" [disabled]="!messageForm.form.valid" type="submit">Надіслати</button>
+        <button class="btn btn-danger" (click)="CanselForm()">Скасувати</button>
+      </div>
+</form>

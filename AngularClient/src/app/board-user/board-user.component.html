@@ -1,0 +1,123 @@
+<div class="container">
+  <header class="jumbotron">
+    <div *ngIf="IsCreate || IsUpdate || IsGetPassword">
+      <form (ngSubmit)="onSubmit()" #passwordForm="ngForm" autocomplete="off">
+        <div class="form-group">
+          <label for="">Ім'я</label>
+          <input type="text" (change)="checkName()" [(ngModel)]="newPassword.namePassword" name="namePassword" class="form-control" id="name"
+            ngModel namePassword #namePassword="ngModel" [readonly]="IsGetPassword" required>
+          <div *ngIf="(!IsGetPassword && namePassword.invalid && (namePassword.dirty || namePassword.touched))"
+            class="alert alert-danger">
+            <div *ngIf="namePassword.errors!.required">
+              Потрібно вказати ім’я.
+            </div>
+          </div>
+        </div>
+        <div *ngIf="IsUpdate" class="form-group">
+          <input [(ngModel)]="IsResetPassword" name="isResetPassword" type="checkbox"> Reset password
+        </div>
+        <div *ngIf="IsGetPassword || IsResetPassword" class="form-group">
+          <label for="">Поточний пароль</label>
+          <input type="password" [(ngModel)]="newPassword.oldPassword" name="oldPassword" class="form-control"
+            id="oldPassword" minlength="2" ngModel oldPassword #oldPassword="ngModel" required>
+          <div *ngIf="oldPassword.invalid && (oldPassword.dirty || oldPassword.touched)" class="alert alert-danger">
+            <div *ngIf="oldPassword.errors!.required">
+              Потрібний поточний пароль.
+            </div>
+            <div *ngIf="oldPassword.errors?.minlength">
+              Пароль повинен містити щонайменше 2 символи.
+            </div>
+          </div>
+        </div>
+        <div *ngIf="(IsUpdate && IsResetPassword) || IsCreate">
+          <div class="form-group">
+            <label for="">Новий пароль</label>
+            <input type="text" [(ngModel)]="newPassword.newPassword" name="newPasswords" class="form-control"
+              id="newPasswords" minlength="2" ngModel newPasswords #newPasswords="ngModel" required>
+            <div *ngIf="newPasswords.invalid && (newPasswords.dirty || newPasswords.touched)"
+              class="alert alert-danger">
+              <div *ngIf="newPasswords.errors!.required">
+                Потрібен новий пароль.
+              </div>
+              <div *ngIf="newPasswords.errors?.minlength">
+                Пароль повинен містити щонайменше 2 символи.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="">Підтвердіть новий пароль</label>
+            <input type="password" [(ngModel)]="newPassword.confirmNewPassword" name="ConfirmNewPassword"
+              class="form-control" id="ConfirmNewPassword" pattern="{{ newPasswords.value }}" ngModel newPassword
+              #ConfirmNewPassword="ngModel" required>
+            <div *ngIf="ConfirmNewPassword.invalid && (ConfirmNewPassword.dirty || ConfirmNewPassword.touched)"
+              class="alert alert-danger">
+              <div *ngIf="ConfirmNewPassword.errors!.required">
+                Потрібно підтвердити пароль.
+              </div>
+              <div *ngIf="ConfirmNewPassword.errors!.pattern">
+                Новий пароль і пароль не збігаються.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="uniqPassword" class="form-group">
+          <label for="">Унікальний пароль</label>
+          <div class="input-group">
+            <input type="text" id="uniqPassword" class="form-control" value="{{uniqPassword}}" #formInputText readonly>
+            <div class="input-group-append">
+              <span class="input-group-text" id="basic-addon2">
+                <ng-container *ngIf="!isCopied; else elseTemplateCopied">
+                  <fa-icon (cbOnSuccess)="copied($event)" [ngxClipboard]="formInputText" [icon]="faCopyIcon"></fa-icon>
+                </ng-container>
+                <ng-template #elseTemplateCopied>
+                  Скопійовано
+                </ng-template>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="uniqPassword && !IsGetPassword" class="form-group">
+          <label for="">Для підбору вашого пароля буде потрібно ...</label>
+          <div class="input-group">
+            <input type="text" class="form-control" value="{{aboutPassword}}" #formInputText readonly>
+          </div>
+        </div>
+        <div *ngIf="isRequest" class="form-group">
+          <img src="/assets/images/200.gif" style="max-height: 100px; max-width: 100px;" />
+          <h2>зачекайте</h2>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-success margin-right"
+            [disabled]="!passwordForm.form.valid || (!IsResetPassword && !(newPassword.namePassword != password.namePassword))"
+            type="submit">Надіслати</button>
+          <button class="btn btn-danger margin-right" (click)="CanselForm()">Скасувати</button>
+        </div>
+      </form>
+    </div>
+    <div *ngIf="content">
+      <p>{{ content }}</p>
+    </div>
+  </header>
+  <button class="btn btn-primary" (click)="AddPassword()"> Додати пароль</button>
+  <div *ngIf="passwords.length != 0">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th hidden>id</th>
+          <th>Ім'я пароля</th>
+          <th>Дії</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let passwor of passwords">
+          <td hidden> passwor.id</td>
+          <td> {{ passwor.namePassword }}</td>
+          <td>
+            <button class="btn btn-primary margin-right" (click)="GetPassword(passwor.id)"> Отримати</button>
+            <button class="btn btn-primary" (click)="Update(passwor.id)"> Змінити</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

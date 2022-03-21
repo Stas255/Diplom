@@ -1,0 +1,63 @@
+<div class="app">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a href="#" class="navbar-brand">Safe Password Storage</a>
+    <div>
+      <div [ngClass]="{'text-success': ConnectToClient, 'text-danger' : !ConnectToClient }">
+        Клієнтський сервер
+      </div>
+      <div [ngClass]="{'text-success': ConnectToMain, 'text-danger' : !ConnectToMain }">
+        Головний сервер
+      </div>
+    </div>
+    <button class="navbar-toggler btn btn-outline-primary" type="button" data-toggle="collapse"
+      data-target="#navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation"
+      (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="navbarTogglerDemo02">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02" [ngbCollapse]="isCollapsed">
+      <ul class="navbar-nav mr-auto" routerLinkActive="active" (click)="isCollapsed = !isCollapsed">
+        <li class="nav-item">
+          <a href="/home" class="nav-link" routerLink="home">Додому </a>
+        </li>
+        <li class="nav-item" *ngIf="showAdminBoard">
+          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-users">Звіти про помилки
+            (користувачі)</a>
+        </li>
+        <li class="nav-item" *ngIf="showAdminBoard">
+          <a href="/admin" class="nav-link" *ngIf="isLoggedIn" routerLink="bug-report-system">Звіти про помилки
+            (система)</a>
+        </li>
+        <li class="nav-item" *ngIf="showAdminBoard">
+          <a href="/blocked" class="nav-link" *ngIf="isLoggedIn" routerLink="blocked">Заблоковані користувачі</a>
+        </li>
+        <li class="nav-item" *ngIf="showUserBoard">
+          <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user">Паролі</a>
+        </li>
+        <li class="nav-item" *ngIf="showUserBoard">
+          <a href="/report" class="nav-link" *ngIf="isLoggedIn" routerLink="report">Повідомити про помилку</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn" (click)="isCollapsed = !isCollapsed">
+        <li class="nav-item">
+          <a href="/register" class="nav-link" routerLink="register">Зареєструватися</a>
+        </li>
+        <li class="nav-item">
+          <a href="/login" class="nav-link" routerLink="login">Увійти</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn" (click)="isCollapsed = !isCollapsed">
+        <li class="nav-item">
+          <a href="/profile" class="nav-link" routerLink="profile">{{ username }}</a>
+        </li>
+        <li class="nav-item">
+          <a href class="nav-link" (click)="logout()">Вийти</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
